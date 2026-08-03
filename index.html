@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Evil Web — Cyber Lab</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        /* ===== RESET & VARIABLES ===== */
+        :root {
+            --bg-primary: #0D1117;
+            --bg-surface: #1A1D23;
+            --bg-card: #1A1D23;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A5A5A5;
+            --border-color: #2A2F3A;
+            --accent: #00FF88;
+            --gold: #FFD700;
+            --danger: #FF3B30;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --radius: 16px;
+            --transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .light {
+            --bg-primary: #F0F2F5;
+            --bg-surface: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --text-primary: #222222;
+            --text-secondary: #666666;
+            --border-color: #D0D5DD;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            transition: background var(--transition);
+        }
+        .app {
+            max-width: 420px;
+            width: 100%;
+            height: 780px;
+            background: var(--bg-primary);
+            border-radius: 36px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+        /* ===== LOADING ===== */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            backdrop-filter: blur(4px);
+        }
+        .loading-overlay.active { display: flex; }
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* ===== SCREENS ===== */
+        .screen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 20px 16px 80px;
+            overflow-y: auto;
+            background: var(--bg-primary);
+            transition: background var(--transition);
+        }
+        .screen.active { display: block; }
+        .slide-in {
+            animation: slideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateX(30px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ===== SPLASH ===== */
+        #splash {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-primary);
+            padding: 40px;
+            text-align: center;
+            z-index: 10;
+            animation: none;
+        }
+        #splash .logo-wrap {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        #splash .logo-wrap::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 160px;
+            height: 160px;
+            background: var(--accent);
+            filter: blur(70px);
+            opacity: 0.12;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        #splash .logo { width: 80px; height: 80px; opacity: 0; animation: fadeLogo 0.6s ease 0.2s forwards; position: relative; z-index: 1; }
+        @keyframes fadeLogo { 0% { opacity: 0; transform: scale(0.7); } 100% { opacity: 1; transform: scale(1); } }
+        #splash .app-name {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 2px;
+            margin-top: 8px;
+            min-height: 48px;
+            position: relative;
+            z-index: 1;
+        }
+        #splash .app-name .letter {
+            display: inline-block;
+            opacity: 0;
+            animation: popIn 0.2s ease forwards;
+        }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.5) translateY(8px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        #splash .app-name .letter.float {
+            animation: floatWave 2.8s ease-in-out infinite;
+        }
+        @keyframes floatWave {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(-3px); }
+            50% { transform: translateY(-6px); }
+            75% { transform: translateY(-3px); }
+            100% { transform: translateY(0); }
+        }
+        #splash .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 32px;
+            background: var(--accent);
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: blink 0.8s step-end infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        #splash .subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fadeInSub 0.6s ease 2.0s forwards;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes fadeInSub { 0% { opacity: 0; transform: translateY(6px); } 100% { opacity: 1; transform: translateY(0); } }
+        #splash .version {
+            color: var(--border-color);
+            font-size: 12px;
+            margin-top: 40px;
+            letter-spacing: 1px;
+            opacity: 0;
+            animation: fadeInSub 0.4s ease 2.4s forwards;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== HEADER ===== */
+        .home-header { padding: 12px 0 16px; }
+        .home-header .title { font-size: 24px; font-weight: 600; color: var(--text-primary); }
+        .home-header .sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+
+        /* ===== SEARCH ===== */
+        .search-box {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 12px;
+            transition: border var(--transition);
+            outline: none;
+        }
+        .search-box:focus { border-color: var(--accent); }
+        .search-box::placeholder { color: var(--text-secondary); }
+
+        /* ===== COURSE CARD (Button) ===== */
+        .course-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            text-align: left;
+            font: inherit;
+            color: inherit;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+        }
+        .course-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+        .course-card:active { transform: scale(0.97); }
+        .course-card .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 255, 136, 0.15);
+            transform: scale(0);
+            animation: rippleAnim 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+        .course-card .row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .course-card .icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 255, 136, 0.08);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--accent);
+        }
+        .course-card .info { flex: 1; }
+        .course-card .info .name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+        .course-card .info .desc { font-size: 12px; color: var(--text-secondary); }
+        .course-card .tag {
+            font-size: 10px;
+            background: rgba(0, 255, 136, 0.08);
+            color: var(--accent);
+            padding: 2px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        .course-card .progress {
+            width: 100%;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 4px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+        .course-card .progress .bar {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .course-card .cert-badge {
+            font-size: 10px;
+            background: var(--accent);
+            color: #0D1117;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-left: 6px;
+            display: inline-block;
+        }
+        .course-card .premium-lock {
+            font-size: 10px;
+            background: var(--gold);
+            color: #0D1117;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-left: 6px;
+            display: inline-block;
+        }
+        .course-card .lock-icon { color: var(--gold); margin-left: 6px; font-size: 12px; }
+
+        /* ===== PREMIUM BANNER ===== */
+        .premium-banner {
+            background: linear-gradient(145deg, #1A1D23, #2A2F3A);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin: 12px 0;
+            border: 1px solid var(--gold);
+            text-align: center;
+        }
+        .premium-banner .title { font-size: 18px; font-weight: 700; color: var(--gold); }
+        .premium-banner .sub { font-size: 13px; color: var(--text-secondary); margin: 4px 0 12px; }
+        .premium-banner .btn {
+            background: var(--gold);
+            color: #0D1117;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 4px;
+        }
+        .premium-banner .btn:hover { transform: scale(1.02); }
+        .premium-banner .btn:active { transform: scale(0.95); }
+        .premium-banner .btn-contact { background: var(--accent); color: #0D1117; }
+
+        /* ===== UNLOCK ===== */
+        .unlock-section {
+            background: var(--bg-surface);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin: 12px 0;
+            border: 1px solid var(--border-color);
+        }
+        .unlock-section .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+        .unlock-section .input-row { display: flex; gap: 8px; }
+        .unlock-section input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border var(--transition);
+        }
+        .unlock-section input:focus { border-color: var(--accent); }
+        .unlock-section .unlock-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            background: var(--gold);
+            color: #0D1117;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .unlock-section .unlock-btn:hover { transform: scale(1.02); }
+        .unlock-section .unlock-btn:active { transform: scale(0.95); }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 8px;
+            z-index: 5;
+            transition: background var(--transition), border var(--transition);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: 0.25s ease;
+            gap: 2px;
+            padding: 4px 12px;
+            border: none;
+            background: transparent;
+            position: relative;
+        }
+        .nav-item .icon { font-size: 20px; transition: 0.25s ease; }
+        .nav-item .label { font-weight: 500; letter-spacing: 0.3px; }
+        .nav-item.active { color: var(--accent); }
+        .nav-item.active .icon { color: var(--accent); }
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .nav-item.active::after { width: 24px; }
+
+        /* ===== LESSON ===== */
+        .back-btn {
+            font-size: 20px;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 8px;
+            display: inline-block;
+            margin-bottom: 4px;
+            transition: 0.2s;
+        }
+        .back-btn:hover { color: var(--accent); }
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .lesson-header .title { font-size: 18px; font-weight: 600; color: var(--text-primary); }
+        .lesson-header .progress { font-size: 12px; color: var(--text-secondary); }
+        .lesson-content {
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-y: auto;
+            max-height: calc(100% - 120px);
+            padding-right: 4px;
+        }
+        .lesson-content .code-block {
+            background: var(--bg-surface);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: var(--accent);
+            margin: 12px 0;
+            border-left: 3px solid var(--accent);
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        .lesson-content .scroll-track { height: 2px; background: transparent; margin-top: 20px; }
+        .quiz-option {
+            background: var(--bg-surface);
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin: 6px 0;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text-primary);
+        }
+        .quiz-option:hover { border-color: var(--accent); }
+        .quiz-option:active { transform: scale(0.97); }
+        .quiz-option.correct { border-color: var(--accent); background: rgba(0, 255, 136, 0.05); }
+        .quiz-option.wrong { border-color: var(--danger); background: rgba(255, 59, 48, 0.05); }
+
+        /* ===== LABS ===== */
+        .lab-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .lab-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+        .lab-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .lab-card:active { transform: scale(0.95); }
+        .lab-card .icon { font-size: 28px; color: var(--accent); }
+        .lab-card .name { font-size: 14px; font-weight: 600; margin-top: 6px; color: var(--text-primary); }
+        .lab-card .status { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+        .lab-card .badge {
+            font-size: 10px;
+            background: rgba(0, 255, 136, 0.08);
+            color: var(--accent);
+            padding: 2px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 6px;
+        }
+        .lab-card .badge.locked { background: rgba(255, 59, 48, 0.08); color: var(--danger); }
+        .lab-card .badge.premium { background: var(--gold); color: #0D1117; }
+        .lab-card .lock-icon { color: var(--gold); font-size: 12px; margin-left: 4px; }
+
+        /* ===== TOOLS ===== */
+        .tool-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-card);
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+        .tool-item:hover { border-color: var(--accent); transform: translateX(4px); }
+        .tool-item:active { transform: scale(0.97); }
+        .tool-item .icon { font-size: 18px; color: var(--accent); width: 24px; text-align: center; }
+        .tool-item .name { flex: 1; font-size: 14px; color: var(--text-primary); }
+        .tool-item .arrow { color: var(--text-secondary); font-size: 14px; }
+        .tool-item .premium-tag {
+            font-size: 9px;
+            background: var(--gold);
+            color: #0D1117;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+        .tool-item .lock-icon { color: var(--gold); font-size: 12px; margin-left: 4px; }
+
+        /* ===== PROFILE ===== */
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--bg-surface);
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 12px;
+            color: var(--text-primary);
+        }
+        .profile-name { text-align: center; font-size: 20px; font-weight: 600; color: var(--text-primary); }
+        .profile-email { text-align: center; font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin: 16px 0;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .stat-card .value { font-size: 18px; color: var(--accent); font-weight: 700; }
+        .stat-card .label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 20;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(-8px); }
+        .toast.success { border-color: var(--accent); }
+        .toast.error { border-color: var(--danger); }
+
+        /* ===== THEME ===== */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            transition: 0.2s;
+        }
+        .theme-toggle:hover { border-color: var(--accent); }
+        .theme-toggle .icon { font-size: 16px; }
+
+        /* ===== CONFETTI ===== */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            overflow: hidden;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .screen::-webkit-scrollbar { width: 3px; }
+        .screen::-webkit-scrollbar-track { background: transparent; }
+        .screen::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+        @media (max-width: 480px) {
+            .app { border-radius: 0; height: 100vh; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+    <!-- LOADING -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- ========== SPLASH ========== -->
+    <div class="screen" id="splash" style="display:flex; animation:none;">
+        <div class="logo-wrap">
+            <svg class="logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" rx="24" fill="var(--accent)" opacity="0.12" />
+                <path d="M30 50 L40 40 L55 55 L70 35 L80 45 L55 70 L30 50Z" fill="var(--accent)" />
+                <path d="M20 70 L35 55 L45 65 L35 75 L20 70Z" fill="var(--accent)" opacity="0.5" />
+                <circle cx="70" cy="30" r="6" fill="var(--accent)" opacity="0.3" />
+            </svg>
+        </div>
+        <div class="app-name" id="appName"></div>
+        <div class="subtitle">Learn. Practice. Exploit. Improve.</div>
+        <div class="version">v1.0.0</div>
+        <div class="dev-credit" style="color:var(--border-color); font-size:10px; margin-top:12px; letter-spacing:0.5px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
+    </div>
+
+    <!-- ========== HOME ========== -->
+    <div class="screen" id="home">
+        <div class="home-header">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div><div class="title">Cyber Lab</div><div class="sub">Learn. Practice. Exploit. Improve.</div></div>
+                <div class="theme-toggle" onclick="toggleTheme()"><span class="icon" id="themeIcon">🌙</span></div>
+            </div>
+        </div>
+
+        <div class="premium-banner" id="premiumBanner">
+            <div class="title" id="premiumTitle">⭐ Unlock Everything</div>
+            <div class="sub" id="premiumSub">Get all tools, advanced labs, certificates, and exclusive content.</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;">
+                <button class="btn btn-contact" onclick="contactSeller()">📞 Contact Me</button>
+                <button class="btn" onclick="showUnlock()">🔑 Enter Code</button>
+            </div>
+        </div>
+
+        <div class="unlock-section" id="unlockSection" style="display:none;">
+            <label class="label">Enter your premium unlock code:</label>
+            <div class="input-row">
+                <input type="text" id="unlockCode" placeholder="Paste code here..." />
+                <button class="unlock-btn" onclick="unlockPremium()">Unlock</button>
+            </div>
+            <div id="unlockStatus" style="font-size:12px; margin-top:6px; color:var(--text-secondary);"></div>
+        </div>
+
+        <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search courses, labs, tools..." oninput="filterAll()" />
+
+        <div class="section-title"><i class="fas fa-book-open" style="color:var(--accent); margin-right:8px;"></i> Courses</div>
+        <div id="courseList"></div>
+
+        <div style="height:20px;"></div>
+        <div class="dev-credit" style="color:var(--border-color);">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
+    </div>
+
+    <!-- ========== LESSON ========== -->
+    <div class="screen" id="lesson">
+        <span class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></span>
+        <div class="lesson-header">
+            <div class="title" id="lessonTitle">SQL Injection</div>
+            <div class="progress" id="lessonProgress">0%</div>
+        </div>
+        <div class="lesson-content" id="lessonContent"></div>
+        <div class="dev-credit" style="color:var(--border-color); margin-top:20px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
+    </div>
+
+    <!-- ========== LABS ========== -->
+    <div class="screen" id="labs">
+        <div class="home-header">
+            <div class="title"><i class="fas fa-flask" style="color:var(--accent); margin-right:8px;"></i> Cyber Labs</div>
+            <div class="sub">Practice exploits in a safe environment</div>
+        </div>
+        <div class="lab-grid" id="labGrid"></div>
+        <div class="dev-credit" style="color:var(--border-color); margin-top:20px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
+    </div>
+
+    <!-- ========== TOOLS ========== -->
+    <div class="screen" id="tools">
+        <div class="home-header">
+            <div class="title"><i class="fas fa-tools" style="color:var(--accent); margin-right:8px;"></i> Tools</div>
+            <div class="sub">Essential cybersecurity tools</div>
+        </div>
+        <div id="toolList"></div>
+        <div class="dev-credit" style="color:var(--border-color); margin-top:20px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
+    </div>
+
+    <!-- ========== PROFILE ========== -->
+    <div class="screen" id="profile">
+        <div class="home-header">
+            <div class="title"><i class="fas fa-user" style="color:var(--accent); margin-right:8px;"></i> Profile</div>
+        </div>
+        <div class="profile-avatar"><i class="fas fa-user-circle"></i></div>
+        <div class="profile-name" id="profileName">Praise</div>
+        <div class="profile-email">praise@evilweb.com</div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="value" id="statCourses">0</div><div class="label">Courses</div></div>
+            <div class="stat-card"><div class="value" id="statLabs">0</div><div class="label">Labs</div></div>
+            <div class="stat-card"><div class="value" id="statStreak">0</div><div class="label">Streak</div></div>
+        </div>
+        <div style="margin-top:12px;">
+            <div style="background:var(--bg-card); border-radius:12px; padding:14px 16px; display:flex; justify-content:space-between; border:1px solid var(--border-color); margin-bottom:8px; cursor:pointer;" onclick="toggleTheme()">
+                <span><i class="fas fa-moon" style="color:var(--text-secondary); margin-right:8px;"></i> Dark Mode</span>
+                <span style="color:var(--accent);" id="themeStatus"><i class="fas fa-toggle-on"></i> On</span>
+            </div>
+            <div style="background:var(--bg-card); border-radius:12px; padding:14px 16px; display:flex; justify-content:space-between; border:1px solid var(--border-color); margin-bottom:8px;">
+                <span><i class="fas fa-crown" style="color:var(--gold); margin-right:8px;"></i> Premium</span>
+                <span id="premiumStatus" style="color:var(--text-secondary);">Inactive</span>
+            </div>
+            <div style="background:var(--bg-card); border-radius:12px; padding:14px 16px; display:flex; justify-content:space-between; border:1px solid var(--border-color); margin-bottom:8px; cursor:pointer;" onclick="showToast('Logged out successfully', 'success')">
+                <span style="color:var(--danger);"><i class="fas fa-sign-out-alt" style="margin-right:8px;"></i> Logout</span>
+                <span style="color:var(--danger);"><i class="fas fa-chevron-right"></i></span>
+            </div>
+        </div>
+        <div class="dev-credit" style="color:var(--border-color); margin-top:20px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
+    </div>
+
+    <!-- ========== TOAST ========== -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ========== CONFETTI ========== -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <!-- ========== BOTTOM NAV ========== -->
+    <div class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" data-screen="home"><span class="icon"><i class="fas fa-home"></i></span><span class="label">Home</span></button>
+        <button class="nav-item" data-screen="labs"><span class="icon"><i class="fas fa-flask"></i></span><span class="label">Labs</span></button>
+        <button class="nav-item" data-screen="tools"><span class="icon"><i class="fas fa-tools"></i></span><span class="label">Tools</span></button>
+        <button class="nav-item" data-screen="profile"><span class="icon"><i class="fas fa-user"></i></span><span class="label">Profile</span></button>
+    </div>
+
+</div>
+
+<script>
+    // ================================
+    // CONFIG
+    // ================================
+    const APP_CONFIG = {
+        contactPhone: '+2349134847118',
+        appName: 'Evil Web',
+        version: '1.0.0'
+    };
+
+    // ================================
+    // MOCK API (Replace with real backend)
+    // ================================
+    const API = {
+        validatePremium: (code) => {
+            const SECRET = 'haiHIjTakh129016255';
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({ valid: code === SECRET, message: code === SECRET ? 'Valid' : 'Invalid' });
+                }, 600);
+            });
+        },
+        saveProgress: (data) => {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    localStorage.setItem('evilweb_progress', JSON.stringify(data));
+                    resolve({ success: true });
+                }, 300);
+            });
+        }
+    };
+
+    // ================================
+    // PREMIUM STATE
+    // ================================
+    let isPremium = localStorage.getItem('evilweb_premium') === 'true';
+    let scrollListenerActive = false;
+
+    // ================================
+    // DATA
+    // ================================
+    const allCourses = [
+        { id: 'sql', title: 'SQL Injection', desc: 'Understand and prevent database attacks', icon: 'fa-database', tag: 'Beginner', premium: false, content: `
+            <h3>SQL Injection</h3>
+            <p>SQL Injection is a code injection technique that exploits vulnerabilities in the database layer.</p>
+            <div class="code-block">-- Vulnerable: $query = "SELECT * FROM users WHERE username = '" . $username . "'";<br>-- Input: admin' --</div>
+            <p><strong>Prevention:</strong> Use parameterised queries, validate input, least privilege.</p>
+            <div style="margin:16px 0;"><p><strong>✅ Knowledge Check: What does <code>--</code> do?</strong></p>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">A) Executes</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true)">B) Comments out</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">C) Deletes</div>
+            </div>
+        `, completed: false },
+        { id: 'xss', title: 'Cross‑Site Scripting', desc: 'Identify and mitigate XSS vulnerabilities', icon: 'fa-code', tag: 'Intermediate', premium: false, content: `
+            <h3>Cross‑Site Scripting (XSS)</h3>
+            <p>XSS allows attackers to inject scripts into web pages.</p>
+            <div class="code-block">&lt;script&gt;alert('XSS')&lt;/script&gt;</div>
+            <p><strong>Types:</strong> Stored, Reflected, DOM</p>
+            <div style="margin:16px 0;"><p><strong>✅ Knowledge Check: Which type is stored on the server?</strong></p>
+                <div class="quiz-option" onclick="checkQuiz(this, true)">A) Stored XSS</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">B) Reflected XSS</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">C) DOM XSS</div>
+            </div>
+        `, completed: false },
+        { id: 'network', title: 'Network Sniffing', desc: 'Analyse and secure network traffic', icon: 'fa-wifi', tag: 'Advanced', premium: false, content: `
+            <h3>Network Sniffing</h3>
+            <p>Capturing and analysing network traffic.</p>
+            <div class="code-block">tcpdump -i eth0</div>
+            <p><strong>Tools:</strong> Wireshark, Tcpdump, BetterCAP</p>
+            <div style="margin:16px 0;"><p><strong>✅ Knowledge Check: Which tool is used for sniffing?</strong></p>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">A) Nmap</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true)">B) Wireshark</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">C) Metasploit</div>
+            </div>
+        `, completed: false },
+        { id: 'linux', title: 'Linux Basics', desc: 'Essential Linux commands for security', icon: 'fa-terminal', tag: 'Beginner', premium: false, content: `<h3>Linux Basics</h3><p>Essential commands for security.</p><div class="code-block">ls -la<br>chmod +x script.sh<br>sudo apt update</div>`, completed: false },
+        { id: 'websec', title: 'Web Security', desc: 'Fundamentals of web application security', icon: 'fa-globe', tag: 'Intermediate', premium: false, content: `<h3>Web Security</h3><p>OWASP Top 10 and how to protect web applications.</p>`, completed: false },
+        { id: 'auth', title: 'Authentication', desc: 'Secure login systems and session management', icon: 'fa-lock', tag: 'Intermediate', premium: false, content: `<h3>Authentication</h3><p>Password hashing, multi‑factor authentication, and secure sessions.</p>`, completed: false },
+        { id: 'passwords', title: 'Password Security', desc: 'Create and manage strong passwords', icon: 'fa-key', tag: 'Beginner', premium: false, content: `<h3>Password Security</h3><p>Best practices, hashing algorithms, and avoiding common mistakes.</p>`, completed: false },
+        { id: 'crypto', title: 'Cryptography', desc: 'Encryption, hashing, and digital signatures', icon: 'fa-shield-alt', tag: 'Advanced', premium: true, content: `<h3>Cryptography</h3><p>Symmetric and asymmetric encryption, hashing algorithms, and real‑world applications.</p>`, completed: false },
+        { id: 'forensics', title: 'Digital Forensics', desc: 'Collect and analyse digital evidence', icon: 'fa-search-plus', tag: 'Advanced', premium: true, content: `<h3>Digital Forensics</h3><p>Disk imaging, file carving, and forensic analysis.</p>`, completed: false }
+    ];
+
+    const labData = [
+        { id: 'sqli-lab', name: 'SQLi Simulator', icon: 'fa-syringe', status: 'Active', badge: 'Practice', locked: false, premium: false },
+        { id: 'xss-lab', name: 'XSS Sandbox', icon: 'fa-pen-fancy', status: 'Active', badge: 'Exploit', locked: false, premium: false },
+        { id: 'password-lab', name: 'Password Strength', icon: 'fa-key', status: 'Active', badge: 'Analyze', locked: false, premium: false },
+        { id: 'hash-lab', name: 'Hash Identifier', icon: 'fa-fingerprint', status: 'Active', badge: 'Identify', locked: false, premium: false },
+        { id: 'port-lab', name: 'Port Scanner Sim', icon: 'fa-search', status: 'Locked', badge: 'Locked', locked: true, premium: false },
+        { id: 'advanced-lab', name: 'Advanced Exploit', icon: 'fa-bug', status: 'Locked', badge: 'Premium', locked: true, premium: true }
+    ];
+
+    const toolData = [
+        { name: 'Port Scanner', icon: 'fa-search', premium: false },
+        { name: 'SQLi Helper', icon: 'fa-bolt', premium: false },
+        { name: 'XSS Tester', icon: 'fa-bullseye', premium: false },
+        { name: 'Hash Cracker', icon: 'fa-key', premium: true },
+        { name: 'Burp Suite Pro', icon: 'fa-bug', premium: true },
+        { name: 'Metasploit Framework', icon: 'fa-skull', premium: true }
+    ];
+
+    // ================================
+    // STATE
+    // ================================
+    let progress = JSON.parse(localStorage.getItem('evilweb_progress')) || {};
+    let completedCourses = JSON.parse(localStorage.getItem('evilweb_completed')) || [];
+    let streak = parseInt(localStorage.getItem('evilweb_streak')) || 0;
+    let lastLogin = localStorage.getItem('evilweb_lastlogin') || '';
+    let currentLessonId = null;
+
+    // ================================
+    // PREMIUM FUNCTIONS
+    // ================================
+    function contactSeller() {
+        if (navigator.userAgent.match(/Android|iPhone|iPad|iPod/i)) {
+            window.open(`tel:${APP_CONFIG.contactPhone}`);
+        } else {
+            navigator.clipboard.writeText(APP_CONFIG.contactPhone).then(() => {
+                showToast(`📞 Phone copied: ${APP_CONFIG.contactPhone}`, 'info');
+            }).catch(() => {
+                showToast(`📞 Contact: ${APP_CONFIG.contactPhone}`, 'info');
+            });
+        }
+    }
+
+    function showUnlock() {
+        const section = document.getElementById('unlockSection');
+        section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        document.getElementById('unlockStatus').textContent = '';
+        document.getElementById('unlockCode').value = '';
+    }
+
+    async function unlockPremium() {
+        const code = document.getElementById('unlockCode').value.trim();
+        const status = document.getElementById('unlockStatus');
+
+        if (!code) {
+            status.textContent = '❌ Please enter a code.';
+            status.style.color = 'var(--danger)';
+            return;
+        }
+
+        showLoading(true);
+        const result = await API.validatePremium(code);
+        showLoading(false);
+
+        if (result.valid) {
+            isPremium = true;
+            localStorage.setItem('evilweb_premium', 'true');
+            status.textContent = '✅ Premium unlocked! 🎉';
+            status.style.color = 'var(--accent)';
+            document.getElementById('unlockSection').style.display = 'none';
+            updatePremiumUI();
+            renderAll();
+            updateProfile();
+            fireConfetti();
+            showToast('🎉 Premium unlocked! Enjoy all features.', 'success');
+        } else {
+            status.textContent = '❌ Invalid code. Please contact the seller.';
+            status.style.color = 'var(--danger)';
+            showToast('❌ Invalid unlock code.', 'error');
+        }
+    }
+
+    function updatePremiumUI() {
+        const banner = document.getElementById('premiumBanner');
+        const title = document.getElementById('premiumTitle');
+        const sub = document.getElementById('premiumSub');
+
+        if (isPremium) {
+            title.textContent = '⭐ Premium Active';
+            sub.textContent = 'You have full access to all tools, labs, and courses.';
+            banner.style.borderColor = 'var(--accent)';
+            document.getElementById('premiumStatus').textContent = '✅ Active';
+            document.getElementById('premiumStatus').style.color = 'var(--accent)';
+        } else {
+            title.textContent = '⭐ Unlock Everything';
+            sub.textContent = 'Get all tools, advanced labs, certificates, and exclusive content.';
+            banner.style.borderColor = 'var(--gold)';
+            document.getElementById('premiumStatus').textContent = 'Inactive';
+            document.getElementById('premiumStatus').style.color = 'var(--text-secondary)';
+        }
+    }
+
+    // ================================
+    // LOADING
+    // ================================
+    function showLoading(state) {
+        document.getElementById('loadingOverlay').classList.toggle('active', state);
+    }
+
+    // ================================
+    // SPLASH (Waits for window.onload)
+    // ================================
+    window.addEventListener('load', function() {
+        const name = 'EVIL WEB';
+        const container = document.getElementById('appName');
+        const splash = document.getElementById('splash');
+
+        name.split('').forEach((char, i) => {
+            const span = document.createElement('span');
+            span.className = 'letter';
+            span.textContent = char === ' ' ? '\u00A0' : char;
+            span.style.animationDelay = (0.5 + i * 0.1) + 's';
+            container.appendChild(span);
+        });
+
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        cursor.style.animationDelay = '1.8s';
+        container.appendChild(cursor);
+
+        setTimeout(() => { cursor.style.display = 'none'; }, 2000);
+
+        setTimeout(() => {
+            document.querySelectorAll('#appName .letter').forEach((el, i) => {
+                setTimeout(() => {
+                    el.classList.add('float');
+                    el.style.animationDelay = (i * 0.12) + 's';
+                }, i * 30);
+            });
+        }, 1800);
+
+        setTimeout(() => {
+            splash.style.transition = 'opacity 0.4s ease';
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+                document.getElementById('home').classList.add('active');
+                updatePremiumUI();
+                renderAll();
+                updateProfile();
+
+                const today = new Date();
+                const todayStr = today.toDateString();
+                if (lastLogin !== todayStr) {
+                    if (lastLogin) {
+                        const last = new Date(lastLogin);
+                        const diff = Math.floor((today - last) / (1000 * 60 * 60 * 24));
+                        if (diff === 1) { streak++; }
+                        else if (diff > 1) { streak = 0; }
+                    } else {
+                        streak = 1;
+                    }
+                    localStorage.setItem('evilweb_streak', streak);
+                    localStorage.setItem('evilweb_lastlogin', todayStr);
+                }
+                updateProfile();
+            }, 400);
+        }, 3200);
+    });
+
+    // ================================
+    // RENDER ALL
+    // ================================
+    function renderAll(filter = '') {
+        renderCourses(filter);
+        renderLabs(filter);
+        renderTools(filter);
+    }
+
+    function filterAll() {
+        const query = document.getElementById('searchBox').value.toLowerCase().trim();
+        renderAll(query);
+    }
+
+    // ================================
+    // RENDER COURSES
+    // ================================
+    function stripHtml(html) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || '';
+    }
+
+    function renderCourses(filter = '') {
+        const container = document.getElementById('courseList');
+        container.innerHTML = '';
+        const filtered = allCourses.filter(c => {
+            if (filter) {
+                const searchable = `${c.title} ${c.desc} ${c.tag} ${stripHtml(c.content)}`.toLowerCase();
+                if (!searchable.includes(filter)) return false;
+            }
+            return true;
+        });
+
+        filtered.forEach(c => {
+            const p = progress[c.id] || 0;
+            const completed = completedCourses.includes(c.id);
+            const isLocked = c.premium && !isPremium;
+
+            const card = document.createElement('button');
+            card.className = 'course-card';
+            card.style.opacity = isLocked ? '0.6' : '1';
+            card.setAttribute('role', 'button');
+            card.setAttribute('tabindex', '0');
+
+            card.innerHTML = `
+                <div class="row">
+                    <div class="icon"><i class="fas ${c.icon}"></i></div>
+                    <div class="info">
+                        <div class="name">
+                            ${c.title}
+                            ${completed ? '<span class="cert-badge">🎓 Certificate</span>' : ''}
+                            ${isLocked ? '<span class="lock-icon">🔒</span>' : ''}
+                            ${c.premium && isPremium ? '<span class="premium-lock">⭐ Premium</span>' : ''}
+                        </div>
+                        <div class="desc">${c.desc}</div>
+                    </div>
+                    <div class="tag">${c.tag}</div>
+                </div>
+                <div class="progress"><div class="bar" style="width:${p}%"></div></div>
+            `;
+
+            card.addEventListener('click', () => {
+                if (isLocked) {
+                    showToast('⭐ This course is premium. Unlock it to access.', 'error');
+                    return;
+                }
+                openLesson(c.id);
+            });
+
+            container.appendChild(card);
+        });
+    }
+
+    // ================================
+    // LESSON
+    // ================================
+    function openLesson(id) {
+        const course = allCourses.find(c => c.id === id);
+        if (!course) return;
+        if (course.premium && !isPremium) {
+            showToast('⭐ This course is premium. Unlock it to access.', 'error');
+            return;
+        }
+
+        // Remove old scroll listener
+        if (scrollListenerActive) {
+            const oldContent = document.getElementById('lessonContent');
+            if (oldContent) {
+                oldContent.removeEventListener('scroll', handleScroll);
+                scrollListenerActive = false;
+            }
+        }
+
+        currentLessonId = id;
+        document.getElementById('lessonTitle').textContent = course.title;
+        const p = progress[course.id] || 0;
+        document.getElementById('lessonProgress').textContent = `${p}%`;
+        document.getElementById('lessonContent').innerHTML = course.content + '<div class="scroll-track" id="scrollTrack"></div>';
+
+        if (!progress[course.id]) {
+            progress[course.id] = 10;
+            localStorage.setItem('evilweb_progress', JSON.stringify(progress));
+        }
+
+        showScreen('lesson');
+
+        // Add scroll listener
+        const content = document.getElementById('lessonContent');
+        if (content) {
+            content.addEventListener('scroll', handleScroll);
+            scrollListenerActive = true;
+        }
+    }
+
+    function handleScroll() {
+        const content = document.getElementById('lessonContent');
+        if (!content) return;
+        const scrollPercent = content.scrollTop / (content.scrollHeight - content.clientHeight);
+        if (scrollPercent > 0.5 && progress[currentLessonId] < 50) {
+            progress[currentLessonId] = 50;
+            localStorage.setItem('evilweb_progress', JSON.stringify(progress));
+            document.getElementById('lessonProgress').textContent = `${progress[currentLessonId]}%`;
+        }
+    }
+
+    function goHome() {
+        // Clean up scroll listener
+        if (scrollListenerActive) {
+            const content = document.getElementById('lessonContent');
+            if (content) {
+                content.removeEventListener('scroll', handleScroll);
+                scrollListenerActive = false;
+            }
+        }
+        showScreen('home');
+        renderAll();
+        updateProfile();
+    }
+
+    // ================================
+    // QUIZ
+    // ================================
+    function checkQuiz(el, isCorrect) {
+        const parent = el.parentElement;
+        const options = parent.querySelectorAll('.quiz-option');
+        options.forEach(opt => {
+            opt.style.pointerEvents = 'none';
+            if (opt === el) opt.classList.add(isCorrect ? 'correct' : 'wrong');
+        });
+
+        if (isCorrect) {
+            showToast('✅ Correct! Well done.', 'success');
+            const title = document.getElementById('lessonTitle').textContent;
+            const course = allCourses.find(c => c.title === title);
+            if (course && !completedCourses.includes(course.id)) {
+                progress[course.id] = Math.min(100, (progress[course.id] || 0) + 20);
+                localStorage.setItem('evilweb_progress', JSON.stringify(progress));
+                if (progress[course.id] >= 100 && !completedCourses.includes(course.id)) {
+                    completedCourses.push(course.id);
+                    localStorage.setItem('evilweb_completed', JSON.stringify(completedCourses));
+                    showToast('🎉 Course Completed! Certificate Earned!', 'success');
+                    fireConfetti();
+                    renderAll();
+                    updateProfile();
+                    generateCertificate(course.title);
+                }
+                document.getElementById('lessonProgress').textContent = `${progress[course.id]}%`;
+            }
+        } else {
+            showToast('❌ Not quite. Try again.', 'error');
+            setTimeout(() => {
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'wrong');
+                    opt.style.pointerEvents = 'auto';
+                });
+            }, 1500);
+        }
+    }
+
+    // ================================
+    // CERTIFICATE (PDF via jsPDF)
+    // ================================
+    function generateCertificate(courseName) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('landscape', 'mm', 'a4');
+        const name = document.getElementById('profileName').textContent || 'Student';
+        const date = new Date().toLocaleDateString();
+        const certId = 'EW-' + Date.now().toString(36).toUpperCase();
+
+        // Border
+        doc.setDrawColor(0, 255, 136);
+        doc.setLineWidth(1);
+        doc.rect(10, 10, 277, 190);
+
+        // Title
+        doc.setFontSize(28);
+        doc.setTextColor(0, 255, 136);
+        doc.text('🎓 Certificate of Completion', 148.5, 50, { align: 'center' });
+
+        // Body
+        doc.setFontSize(18);
+        doc.setTextColor(255, 255, 255);
+        doc.text('This certifies that', 148.5, 80, { align: 'center' });
+
+        doc.setFontSize(32);
+        doc.setTextColor(0, 255, 136);
+        doc.text(name, 148.5, 105, { align: 'center' });
+
+        doc.setFontSize(18);
+        doc.setTextColor(255, 255, 255);
+        doc.text('has successfully completed the course', 148.5, 130, { align: 'center' });
+
+        doc.setFontSize(26);
+        doc.setTextColor(255, 215, 0);
+        doc.text(courseName, 148.5, 155, { align: 'center' });
+
+        doc.setFontSize(14);
+        doc.setTextColor(200, 200, 200);
+        doc.text(`Date: ${date}  |  Certificate ID: ${certId}`, 148.5, 180, { align: 'center' });
+
+        // Footer
+        doc.setFontSize(10);
+        doc.setTextColor(100, 100, 100);
+        doc.text('Evil Web — Cyber Lab', 148.5, 195, { align: 'center' });
+
+        // Open PDF in new tab
+        const pdfBlob = doc.output('blob');
+        const url = URL.createObjectURL(pdfBlob);
+        window.open(url, '_blank');
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+    }
+
+    // ================================
+    // LABS
+    // ================================
+    function renderLabs(filter = '') {
+        const container = document.getElementById('labGrid');
+        container.innerHTML = '';
+        const filtered = labData.filter(lab => {
+            if (lab.premium && !isPremium) return false;
+            if (filter) {
+                const searchable = `${lab.name} ${lab.status} ${lab.badge}`.toLowerCase();
+                if (!searchable.includes(filter)) return false;
+            }
+            return true;
+        });
+
+        filtered.forEach(lab => {
+            const isUnlocked = (!lab.locked || completedCourses.length >= 2) && (!lab.premium || isPremium);
+            const isLocked = !isUnlocked;
+            const div = document.createElement('div');
+            div.className = 'lab-card';
+            div.style.opacity = isLocked ? '0.5' : '1';
+
+            div.innerHTML = `
+                <div class="icon"><i class="fas ${lab.icon}"></i></div>
+                <div class="name">${lab.name} ${isLocked ? '<span class="lock-icon">🔒</span>' : ''}</div>
+                <div class="status">${isUnlocked ? lab.status : '🔒 Locked'}</div>
+                <div class="badge ${isUnlocked ? '' : 'locked'} ${lab.premium && isPremium ? 'premium' : ''}">${isUnlocked ? lab.badge : 'Locked'} ${lab.premium && isPremium ? '⭐' : ''}</div>
+            `;
+
+            if (isUnlocked) {
+                div.addEventListener('click', () => showToast(`🧪 ${lab.name} — interactive lab coming soon`, 'info'));
+            } else {
+                div.style.cursor = 'not-allowed';
+                const msg = lab.premium ? '⭐ This lab is premium. Unlock it to access.' : '🔒 Complete 2 courses to unlock this lab.';
+                div.addEventListener('click', () => showToast(msg, 'error'));
+            }
+
+            container.appendChild(div);
+        });
+    }
+
+    // ================================
+    // TOOLS
+    // ================================
+    function renderTools(filter = '') {
+        const container = document.getElementById('toolList');
+        container.innerHTML = '';
+        const filtered = toolData.filter(t => {
+            if (t.premium && !isPremium) return false;
+            if (filter) {
+                if (!t.name.toLowerCase().includes(filter)) return false;
+            }
+            return true;
+        });
+
+        filtered.forEach(tool => {
+            const isLocked = tool.premium && !isPremium;
+            const div = document.createElement('div');
+            div.className = 'tool-item';
+            div.style.opacity = isLocked ? '0.5' : '1';
+
+            div.innerHTML = `
+                <span class="icon"><i class="fas ${tool.icon}"></i></span>
+                <span class="name">${tool.name} ${isLocked ? '<span class="lock-icon">🔒</span>' : ''}</span>
+                ${tool.premium && isPremium ? '<span class="premium-tag">⭐ Premium</span>' : ''}
+                <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+            `;
+
+            div.addEventListener('click', () => {
+                if (isLocked) {
+                    showToast('⭐ This tool is premium. Unlock it to access.', 'error');
+                    return;
+                }
+                showToast(`🛠️ ${tool.name} — coming soon`, 'info');
+            });
+
+            container.appendChild(div);
+        });
+    }
+
+    // ================================
+    // PROFILE
+    // ================================
+    function updateProfile() {
+        const done = completedCourses.length;
+        document.getElementById('statCourses').textContent = done;
+        document.getElementById('statLabs').textContent = labData.filter(l => (!l.locked || completedCourses.length >= 2) && (!l.premium || isPremium)).length;
+        document.getElementById('statStreak').textContent = streak;
+    }
+
+    // ================================
+    // NAVIGATION
+    // ================================
+    let currentScreen = 'home';
+    const screens = document.querySelectorAll('.screen');
+    const navItems = document.querySelectorAll('.nav-item');
+
+    function showScreen(id) {
+        showLoading(true);
+        setTimeout(() => {
+            screens.forEach(s => s.classList.remove('active'));
+            const target = document.getElementById(id);
+            if (target) {
+                target.classList.add('active');
+                target.classList.remove('slide-in');
+                requestAnimationFrame(() => target.classList.add('slide-in'));
+            }
+            navItems.forEach(item => {
+                item.classList.toggle('active', item.dataset.screen === id);
+            });
+            currentScreen = id;
+            showLoading(false);
+        }, 300);
+    }
+
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const screenId = item.dataset.screen;
+            if (screenId) showScreen(screenId);
+        });
+    });
+
+    // ================================
+    // THEME
+    // ================================
+    let darkMode = localStorage.getItem('evilweb_theme') !== 'light';
+    function toggleTheme() {
+        darkMode = !darkMode;
+        document.body.classList.toggle('light', !darkMode);
+        document.getElementById('themeIcon').textContent = darkMode ? '🌙' : '☀️';
+        document.getElementById('themeStatus').innerHTML = darkMode ? '<i class="fas fa-toggle-on"></i> On' : '<i class="fas fa-toggle-off"></i> Off';
+        localStorage.setItem('evilweb_theme', darkMode ? 'dark' : 'light');
+    }
+    if (!darkMode) {
+        document.body.classList.add('light');
+        document.getElementById('themeIcon').textContent = '☀️';
+        document.getElementById('themeStatus').innerHTML = '<i class="fas fa-toggle-off"></i> Off';
+    }
+
+    // ================================
+    // TOAST
+    // ================================
+    let toastTimeout = null;
+    function showToast(message, type = 'info') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast';
+        if (type === 'success') toast.classList.add('success');
+        if (type === 'error') toast.classList.add('error');
+        toast.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+
+    // ================================
+    // CONFETTI
+    // ================================
+    function fireConfetti() {
+        const container = document.getElementById('confettiContainer');
+        const colors = ['#00FF88', '#FFD700', '#FF3B30', '#00BFFF', '#FF6B6B', '#A855F7'];
+        for (let i = 0; i < 40; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = Math.random() * 100 + '%';
+            piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.width = (Math.random() * 8 + 4) + 'px';
+            piece.style.height = (Math.random() * 8 + 4) + 'px';
+            piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            piece.style.animationDelay = (Math.random() * 1.5) + 's';
+            container.appendChild(piece);
+            setTimeout(() => piece.remove(), 4000);
+        }
+    }
+
+    // ================================
+    // RIPPLE
+    // ================================
+    document.addEventListener('click', function(e) {
+        const card = e.target.closest('.course-card');
+        if (!card) return;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.style.width = ripple.style.height = '20px';
+        card.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+    });
+
+    // ================================
+    // DEV LOG
+    // ================================
+    console.log(`🖥️ ${APP_CONFIG.appName} — Developed by Mr Dracula | Evil Tech`);
+    console.log('🔐 Learn. Practice. Exploit. Improve.');
+    console.log(`📚 ${completedCourses.length}/${allCourses.filter(c => !c.premium || isPremium).length} courses completed`);
+    console.log(`🔥 ${streak} day streak`);
+    console.log(`⭐ Premium: ${isPremium ? 'ACTIVE' : 'INACTIVE'}`);
+    console.log(`📞 Contact: ${APP_CONFIG.contactPhone}`);
+</script>
+
+</body>
+</html>
