@@ -442,11 +442,76 @@
             color: var(--accent);
             opacity: 0.4;
         }
-        .media-card video {
+
+        /* ===== VIDEO PLAYER (Inline) ===== */
+        .video-wrapper {
+            width: 100%;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin: 8px 0;
+            background: #000;
+            position: relative;
+            aspect-ratio: 16/9;
+        }
+        .video-wrapper video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            background: #000;
+            display: block;
+        }
+        .video-wrapper .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: #fff;
+            opacity: 0.8;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+        .video-wrapper .play-btn:hover { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+
+        /* ===== IMAGE ANIMATION (Pull Up) ===== */
+        .image-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            transform: translateY(40px);
+            opacity: 0;
+            animation: pullUp 0.8s ease forwards;
+        }
+        .image-card:nth-child(1) { animation-delay: 0.1s; }
+        .image-card:nth-child(2) { animation-delay: 0.2s; }
+        .image-card:nth-child(3) { animation-delay: 0.3s; }
+        .image-card:nth-child(4) { animation-delay: 0.4s; }
+        .image-card:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes pullUp {
+            0% { transform: translateY(40px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        .image-card .caption {
+            padding: 8px 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            background: var(--bg-surface);
         }
 
         .whatsapp-btn {
@@ -829,25 +894,36 @@
         <div class="section-title"><i class="fas fa-book-open" style="color:var(--accent); margin-right:8px;"></i> Courses</div>
         <div id="courseList"></div>
 
-        <!-- ===== VIDEO LESSONS SECTION (Home Page) ===== -->
+        <!-- ===== VIDEO LESSONS SECTION (Home Page) — Inline Videos ===== -->
         <div class="section-title" style="margin-top:24px;"><i class="fas fa-video" style="color:var(--accent); margin-right:8px;"></i> Free Video Lessons</div>
-        <div class="media-grid" id="videoGrid">
-            <div class="media-card" onclick="playVideo('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video1.mp4')">
-                <span class="placeholder-icon">▶️</span>
-                <span style="font-size:10px; display:block; margin-top:4px;">Video 1</span>
-            </div>
-            <div class="media-card" onclick="playVideo('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video2.mp4')">
-                <span class="placeholder-icon">▶️</span>
-                <span style="font-size:10px; display:block; margin-top:4px;">Video 2</span>
-            </div>
-            <div class="media-card" onclick="playVideo('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video3.mp4')">
-                <span class="placeholder-icon">▶️</span>
-                <span style="font-size:10px; display:block; margin-top:4px;">Video 3</span>
-            </div>
-            <div class="media-card" onclick="playVideo('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video4.mp4')">
-                <span class="placeholder-icon">▶️</span>
-                <span style="font-size:10px; display:block; margin-top:4px;">Video 4</span>
-            </div>
+
+        <div class="video-wrapper">
+            <video id="video1" muted playsinline autoplay loop>
+                <source src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video1.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+            <div class="play-btn" onclick="togglePlay('video1')">▶</div>
+        </div>
+
+        <div class="video-wrapper">
+            <video id="video2" muted playsinline autoplay loop>
+                <source src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video2.mp4" type="video/mp4" />
+            </video>
+            <div class="play-btn" onclick="togglePlay('video2')">▶</div>
+        </div>
+
+        <div class="video-wrapper">
+            <video id="video3" muted playsinline autoplay loop>
+                <source src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video3.mp4" type="video/mp4" />
+            </video>
+            <div class="play-btn" onclick="togglePlay('video3')">▶</div>
+        </div>
+
+        <div class="video-wrapper">
+            <video id="video4" muted playsinline autoplay loop>
+                <source src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video4.mp4" type="video/mp4" />
+            </video>
+            <div class="play-btn" onclick="togglePlay('video4')">▶</div>
         </div>
 
         <!-- ===== WHATSAPP GROUP BUTTON ===== -->
@@ -1046,12 +1122,33 @@
     }
 
     // ================================
-    // VIDEO PLAYER
+    // VIDEO PLAYER (Inline)
     // ================================
-    function playVideo(url) {
-        // Open video in a new tab or embed
-        window.open(url, '_blank');
-        showToast('🎬 Playing video...', 'info');
+    let activeVideo = null;
+
+    function togglePlay(videoId) {
+        const video = document.getElementById(videoId);
+        if (!video) return;
+
+        if (video.paused) {
+            // If another video is playing, pause it
+            if (activeVideo && activeVideo !== video) {
+                activeVideo.pause();
+                const prevBtn = activeVideo.parentElement.querySelector('.play-btn');
+                if (prevBtn) prevBtn.textContent = '▶';
+            }
+            video.play();
+            activeVideo = video;
+            const btn = video.parentElement.querySelector('.play-btn');
+            if (btn) btn.textContent = '⏸';
+            // Unmute when user clicks play
+            video.muted = false;
+        } else {
+            video.pause();
+            const btn = video.parentElement.querySelector('.play-btn');
+            if (btn) btn.textContent = '▶';
+            activeVideo = null;
+        }
     }
 
     // ================================
@@ -1108,7 +1205,7 @@
     let activeCategory = 'All';
 
     // ================================
-    // DATA — FULL COURSE ROADMAP (with Images under Computer Foundations)
+    // DATA — FULL COURSE ROADMAP (with Images & Pull-Up Animation)
     // ================================
     const allCourses = [
         // Level 1: Computer Foundations (with Images)
@@ -1169,7 +1266,7 @@
                     quiz: null
                 }
             ],
-            // 5 Images for this course (GitHub raw URLs)
+            // 5 Images with Pull-Up Animation (via CSS)
             images: [
                 { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img1.jpg', caption: 'Hardware Guide' },
                 { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img2.jpg', caption: 'CPU Specs' },
@@ -1596,7 +1693,7 @@
     }
 
     // ================================
-    // OPEN COURSE (With Images)
+    // OPEN COURSE (With Images & Pull-Up Animation)
     // ================================
     function openCourse(courseId) {
         const course = allCourses.find(c => c.id === courseId);
@@ -1637,14 +1734,14 @@
             <p>${lesson.text}</p>
         `;
 
-        // If this is the first lesson (Hardware Requirements), show images
+        // If this is the first lesson (Hardware Requirements), show images with Pull-Up animation
         if (currentLessonIndex === 0 && course.images) {
-            html += `<div style="margin:16px 0;"><p><strong>🖼️ Course Resources</strong></p><div class="media-grid">`;
+            html += `<div style="margin:16px 0;"><p><strong>🖼️ Course Resources</strong></p><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">`;
             course.images.forEach(img => {
                 html += `
-                    <div class="media-card">
-                        <img src="${img.url}" alt="${img.caption}" style="width:100%; height:100%; object-fit:cover;" />
-                        <span style="font-size:10px; display:block; padding:4px; background:var(--bg-surface);">${img.caption}</span>
+                    <div class="image-card">
+                        <img src="${img.url}" alt="${img.caption}" loading="lazy" />
+                        <div class="caption">${img.caption}</div>
                     </div>
                 `;
             });
@@ -1992,4 +2089,4 @@
 </script>
 
 </body>
-                </html>
+    </html>
