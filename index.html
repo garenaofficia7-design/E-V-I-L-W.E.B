@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Evil Web — Cyber Lab</title>
+    <title>Evil Web — Cyber Academy</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         /* ===== RESET & VARIABLES ===== */
@@ -194,12 +195,74 @@
             z-index: 1;
         }
 
+        /* ===== AUTH SCREENS ===== */
+        .auth-card {
+            max-width: 360px;
+            margin: 20px auto 0;
+        }
+        .auth-card h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .auth-card .input-group { margin: 12px 0; }
+        .auth-card .input-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .auth-card .input-group input, .auth-card .input-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border var(--transition);
+        }
+        .auth-card .input-group input:focus { border-color: var(--accent); }
+        .auth-card .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            background: var(--accent);
+            color: #0D1117;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+        .auth-card .btn:hover { transform: scale(1.02); }
+        .auth-card .btn:active { transform: scale(0.95); }
+        .auth-card .link {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .auth-card .link span {
+            color: var(--accent);
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .auth-card .error {
+            color: var(--danger);
+            font-size: 13px;
+            text-align: center;
+            margin-top: 8px;
+        }
+
         /* ===== HEADER ===== */
         .home-header { padding: 12px 0 16px; }
         .home-header .title { font-size: 24px; font-weight: 600; color: var(--text-primary); }
         .home-header .sub { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
 
-        /* ===== SEARCH ===== */
+        /* ===== SEARCH & CATEGORIES ===== */
         .search-box {
             width: 100%;
             padding: 12px 16px;
@@ -208,14 +271,50 @@
             background: var(--bg-surface);
             color: var(--text-primary);
             font-size: 14px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             transition: border var(--transition);
             outline: none;
         }
         .search-box:focus { border-color: var(--accent); }
         .search-box::placeholder { color: var(--text-secondary); }
 
-        /* ===== COURSE CARD (Button) ===== */
+        .category-bar {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .category-btn {
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+        .category-btn:hover { border-color: var(--accent); color: var(--text-primary); }
+        .category-btn.active {
+            background: var(--accent);
+            color: #0D1117;
+            border-color: var(--accent);
+        }
+
+        .course-stats {
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .course-stats strong { color: var(--text-primary); }
+
+        /* ===== COURSE CARD ===== */
         .course-card {
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -231,8 +330,6 @@
             text-align: left;
             font: inherit;
             color: inherit;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
         }
         .course-card:hover { transform: translateY(-2px); border-color: var(--accent); }
         .course-card:active { transform: scale(0.97); }
@@ -309,68 +406,6 @@
             display: inline-block;
         }
         .course-card .lock-icon { color: var(--gold); margin-left: 6px; font-size: 12px; }
-
-        /* ===== PREMIUM BANNER ===== */
-        .premium-banner {
-            background: linear-gradient(145deg, #1A1D23, #2A2F3A);
-            border-radius: var(--radius);
-            padding: 16px;
-            margin: 12px 0;
-            border: 1px solid var(--gold);
-            text-align: center;
-        }
-        .premium-banner .title { font-size: 18px; font-weight: 700; color: var(--gold); }
-        .premium-banner .sub { font-size: 13px; color: var(--text-secondary); margin: 4px 0 12px; }
-        .premium-banner .btn {
-            background: var(--gold);
-            color: #0D1117;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-            margin: 4px;
-        }
-        .premium-banner .btn:hover { transform: scale(1.02); }
-        .premium-banner .btn:active { transform: scale(0.95); }
-        .premium-banner .btn-contact { background: var(--accent); color: #0D1117; }
-
-        /* ===== UNLOCK ===== */
-        .unlock-section {
-            background: var(--bg-surface);
-            border-radius: var(--radius);
-            padding: 16px;
-            margin: 12px 0;
-            border: 1px solid var(--border-color);
-        }
-        .unlock-section .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; display: block; }
-        .unlock-section .input-row { display: flex; gap: 8px; }
-        .unlock-section input {
-            flex: 1;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 14px;
-            outline: none;
-            transition: border var(--transition);
-        }
-        .unlock-section input:focus { border-color: var(--accent); }
-        .unlock-section .unlock-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 10px;
-            background: var(--gold);
-            color: #0D1117;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .unlock-section .unlock-btn:hover { transform: scale(1.02); }
-        .unlock-section .unlock-btn:active { transform: scale(0.95); }
 
         /* ===== BOTTOM NAV ===== */
         .bottom-nav {
@@ -458,7 +493,6 @@
             overflow-x: auto;
             white-space: pre-wrap;
         }
-        .lesson-content .scroll-track { height: 2px; background: transparent; margin-top: 20px; }
         .quiz-option {
             background: var(--bg-surface);
             padding: 12px 16px;
@@ -659,39 +693,77 @@
             </svg>
         </div>
         <div class="app-name" id="appName"></div>
-        <div class="subtitle">Learn. Practice. Exploit. Improve.</div>
-        <div class="version">v1.0.0</div>
+        <div class="subtitle">Learn. Defend. Analyze. Secure.</div>
+        <div class="version">v2.0.0</div>
         <div class="dev-credit" style="color:var(--border-color); font-size:10px; margin-top:12px; letter-spacing:0.5px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
+    </div>
+
+    <!-- ========== LOGIN ========== -->
+    <div class="screen" id="login">
+        <div class="auth-card">
+            <h2>🔐 Sign In</h2>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="student@email.com" />
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="••••••••" />
+            </div>
+            <button class="btn" onclick="handleLogin()">Sign In</button>
+            <div class="link">Don't have an account? <span onclick="showScreen('register')">Create one</span></div>
+            <div class="error" id="loginError"></div>
+        </div>
+        <div class="dev-credit" style="color:var(--border-color); margin-top:20px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
+    </div>
+
+    <!-- ========== REGISTER ========== -->
+    <div class="screen" id="register">
+        <div class="auth-card">
+            <h2>📝 Create Account</h2>
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="regName" placeholder="John Doe" />
+            </div>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="regEmail" placeholder="student@email.com" />
+            </div>
+            <div class="input-group">
+                <label>Country</label>
+                <input type="text" id="regCountry" placeholder="Nigeria" />
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="regPassword" placeholder="••••••••" />
+            </div>
+            <div class="input-group">
+                <label>Confirm Password</label>
+                <input type="password" id="regConfirm" placeholder="••••••••" />
+            </div>
+            <button class="btn" onclick="handleRegister()">Register</button>
+            <div class="link">Already have an account? <span onclick="showScreen('login')">Sign in</span></div>
+            <div class="error" id="registerError"></div>
+        </div>
+        <div class="dev-credit" style="color:var(--border-color); margin-top:20px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
     </div>
 
     <!-- ========== HOME ========== -->
     <div class="screen" id="home">
         <div class="home-header">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div><div class="title">Cyber Lab</div><div class="sub">Learn. Practice. Exploit. Improve.</div></div>
-                <div class="theme-toggle" onclick="toggleTheme()"><span class="icon" id="themeIcon">🌙</span></div>
+                <div><div class="title">Cyber Lab</div><div class="sub">Learn. Defend. Analyze. Secure.</div></div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span onclick="logout()" style="color:var(--text-secondary); font-size:12px; cursor:pointer;">Logout</span>
+                    <div class="theme-toggle" onclick="toggleTheme()"><span class="icon" id="themeIcon">🌙</span></div>
+                </div>
             </div>
         </div>
 
-        <div class="premium-banner" id="premiumBanner">
-            <div class="title" id="premiumTitle">⭐ Unlock Everything</div>
-            <div class="sub" id="premiumSub">Get all tools, advanced labs, certificates, and exclusive content.</div>
-            <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;">
-                <button class="btn btn-contact" onclick="contactSeller()">📞 Contact Me</button>
-                <button class="btn" onclick="showUnlock()">🔑 Enter Code</button>
-            </div>
-        </div>
+        <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search courses..." oninput="filterAll()" />
 
-        <div class="unlock-section" id="unlockSection" style="display:none;">
-            <label class="label">Enter your premium unlock code:</label>
-            <div class="input-row">
-                <input type="text" id="unlockCode" placeholder="Paste code here..." />
-                <button class="unlock-btn" onclick="unlockPremium()">Unlock</button>
-            </div>
-            <div id="unlockStatus" style="font-size:12px; margin-top:6px; color:var(--text-secondary);"></div>
-        </div>
-
-        <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search courses, labs, tools..." oninput="filterAll()" />
+        <div class="category-bar" id="categoryBar"></div>
+        <div class="course-stats" id="courseStats"></div>
 
         <div class="section-title"><i class="fas fa-book-open" style="color:var(--accent); margin-right:8px;"></i> Courses</div>
         <div id="courseList"></div>
@@ -704,7 +776,7 @@
     <div class="screen" id="lesson">
         <span class="back-btn" onclick="goHome()"><i class="fas fa-arrow-left"></i></span>
         <div class="lesson-header">
-            <div class="title" id="lessonTitle">SQL Injection</div>
+            <div class="title" id="lessonTitle">Course</div>
             <div class="progress" id="lessonProgress">0%</div>
         </div>
         <div class="lesson-content" id="lessonContent"></div>
@@ -715,7 +787,7 @@
     <div class="screen" id="labs">
         <div class="home-header">
             <div class="title"><i class="fas fa-flask" style="color:var(--accent); margin-right:8px;"></i> Cyber Labs</div>
-            <div class="sub">Practice exploits in a safe environment</div>
+            <div class="sub">Practice in a safe environment</div>
         </div>
         <div class="lab-grid" id="labGrid"></div>
         <div class="dev-credit" style="color:var(--border-color); margin-top:20px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
@@ -737,12 +809,17 @@
             <div class="title"><i class="fas fa-user" style="color:var(--accent); margin-right:8px;"></i> Profile</div>
         </div>
         <div class="profile-avatar"><i class="fas fa-user-circle"></i></div>
-        <div class="profile-name" id="profileName">Praise</div>
-        <div class="profile-email">praise@evilweb.com</div>
+        <div class="profile-name" id="profileName">Student</div>
+        <div class="profile-email" id="profileEmail">student@email.com</div>
         <div class="stats-grid">
             <div class="stat-card"><div class="value" id="statCourses">0</div><div class="label">Courses</div></div>
             <div class="stat-card"><div class="value" id="statLabs">0</div><div class="label">Labs</div></div>
             <div class="stat-card"><div class="value" id="statStreak">0</div><div class="label">Streak</div></div>
+        </div>
+        <div class="stats-grid" style="margin-top:8px;">
+            <div class="stat-card"><div class="value" id="statXP">0</div><div class="label">XP</div></div>
+            <div class="stat-card"><div class="value" id="statLevel">1</div><div class="label">Level</div></div>
+            <div class="stat-card"><div class="value" id="statBadges">0</div><div class="label">Badges</div></div>
         </div>
         <div style="margin-top:12px;">
             <div style="background:var(--bg-card); border-radius:12px; padding:14px 16px; display:flex; justify-content:space-between; border:1px solid var(--border-color); margin-bottom:8px; cursor:pointer;" onclick="toggleTheme()">
@@ -753,7 +830,7 @@
                 <span><i class="fas fa-crown" style="color:var(--gold); margin-right:8px;"></i> Premium</span>
                 <span id="premiumStatus" style="color:var(--text-secondary);">Inactive</span>
             </div>
-            <div style="background:var(--bg-card); border-radius:12px; padding:14px 16px; display:flex; justify-content:space-between; border:1px solid var(--border-color); margin-bottom:8px; cursor:pointer;" onclick="showToast('Logged out successfully', 'success')">
+            <div style="background:var(--bg-card); border-radius:12px; padding:14px 16px; display:flex; justify-content:space-between; border:1px solid var(--border-color); margin-bottom:8px; cursor:pointer;" onclick="logout()">
                 <span style="color:var(--danger);"><i class="fas fa-sign-out-alt" style="margin-right:8px;"></i> Logout</span>
                 <span style="color:var(--danger);"><i class="fas fa-chevron-right"></i></span>
             </div>
@@ -784,11 +861,22 @@
     const APP_CONFIG = {
         contactPhone: '+2349134847118',
         appName: 'Evil Web',
-        version: '1.0.0'
+        version: '2.0.0'
     };
 
     // ================================
-    // MOCK API (Replace with real backend)
+    // TELEGRAM NOTIFICATION (Simulated email)
+    // ================================
+    const TELEGRAM_BOT_TOKEN = '8307511016:AAGor4OjszL0BvTz_lI1gMEoijrsOmI16G0';
+    const TELEGRAM_CHAT_ID = '8307511016';
+
+    function sendTelegramNotification(message) {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}`;
+        fetch(url).catch(() => {});
+    }
+
+    // ================================
+    // MOCK API
     // ================================
     const API = {
         validatePremium: (code) => {
@@ -798,74 +886,295 @@
                     resolve({ valid: code === SECRET, message: code === SECRET ? 'Valid' : 'Invalid' });
                 }, 600);
             });
-        },
-        saveProgress: (data) => {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    localStorage.setItem('evilweb_progress', JSON.stringify(data));
-                    resolve({ success: true });
-                }, 300);
-            });
         }
     };
+
+    // ================================
+    // AUTH SYSTEM (localStorage demo — ready for Firebase)
+    // ================================
+    let currentUser = JSON.parse(localStorage.getItem('evilweb_user')) || null;
+
+    function handleRegister() {
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const country = document.getElementById('regCountry').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const confirm = document.getElementById('regConfirm').value;
+        const error = document.getElementById('registerError');
+
+        if (!name || !email || !country || !password || !confirm) {
+            error.textContent = 'Please fill all fields.';
+            return;
+        }
+        if (password !== confirm) {
+            error.textContent = 'Passwords do not match.';
+            return;
+        }
+        if (password.length < 6) {
+            error.textContent = 'Password must be at least 6 characters.';
+            return;
+        }
+
+        // Store user (demo — ready for Firebase)
+        const user = { name, email, country, password, joined: new Date().toISOString() };
+        localStorage.setItem('evilweb_user', JSON.stringify(user));
+        currentUser = user;
+
+        // Notify admin (no password sent!)
+        sendTelegramNotification(`🎓 New Student Registration\nName: ${name}\nEmail: ${email}\nCountry: ${country}\nDate: ${new Date().toLocaleString()}`);
+
+        error.textContent = '';
+        showToast('✅ Account created! Please login.', 'success');
+        showScreen('login');
+    }
+
+    function handleLogin() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const error = document.getElementById('loginError');
+
+        if (!email || !password) {
+            error.textContent = 'Please fill all fields.';
+            return;
+        }
+
+        const stored = JSON.parse(localStorage.getItem('evilweb_user'));
+        if (!stored || stored.email !== email || stored.password !== password) {
+            error.textContent = 'Invalid email or password.';
+            return;
+        }
+
+        currentUser = stored;
+        localStorage.setItem('evilweb_user', JSON.stringify(stored));
+        error.textContent = '';
+        showToast('✅ Welcome back, ' + stored.name + '!', 'success');
+        showScreen('home');
+        renderAll();
+        updateProfile();
+    }
+
+    function logout() {
+        currentUser = null;
+        localStorage.removeItem('evilweb_user');
+        showScreen('login');
+        showToast('Logged out.', 'info');
+    }
+
+    // ================================
+    // COURSE CATEGORIES
+    // ================================
+    const courseCategories = ['All', 'Beginner', 'Intermediate', 'Advanced', 'Premium'];
+
+    // ================================
+    // XP & LEVEL SYSTEM
+    // ================================
+    let xp = parseInt(localStorage.getItem('evilweb_xp')) || 0;
+    let level = 1;
+    let badges = JSON.parse(localStorage.getItem('evilweb_badges')) || [];
+
+    function calculateLevel() {
+        level = Math.floor(xp / 100) + 1;
+        return level;
+    }
+
+    function addXP(amount) {
+        xp += amount;
+        localStorage.setItem('evilweb_xp', xp);
+        const newLevel = calculateLevel();
+        if (newLevel > level) {
+            level = newLevel;
+            showToast(`🎉 Level Up! You're now Level ${level}!`, 'success');
+            fireConfetti();
+        }
+        updateProfile();
+    }
+
+    function checkBadge(criteria) {
+        const badgeMap = {
+            'first_lesson': { name: '🏅 First Lesson', condition: () => completedLessons.length >= 1 },
+            'lesson_10': { name: '🏅 10 Lessons', condition: () => completedLessons.length >= 10 },
+            'course_complete': { name: '🏅 Course Master', condition: () => completedCourses.length >= 1 },
+            'all_courses': { name: '🏅 All Courses', condition: () => completedCourses.length === allCourses.length }
+        };
+        Object.keys(badgeMap).forEach(key => {
+            if (!badges.includes(badgeMap[key].name) && badgeMap[key].condition()) {
+                badges.push(badgeMap[key].name);
+                localStorage.setItem('evilweb_badges', JSON.stringify(badges));
+                showToast(`🏅 New Badge: ${badgeMap[key].name}`, 'success');
+                fireConfetti();
+            }
+        });
+    }
 
     // ================================
     // PREMIUM STATE
     // ================================
     let isPremium = localStorage.getItem('evilweb_premium') === 'true';
     let scrollListenerActive = false;
+    let activeCategory = 'All';
 
     // ================================
-    // DATA
+    // DATA — FULL COURSE ROADMAP (8 Levels)
     // ================================
     const allCourses = [
-        { id: 'sql', title: 'SQL Injection', desc: 'Understand and prevent database attacks', icon: 'fa-database', tag: 'Beginner', premium: false, content: `
-            <h3>SQL Injection</h3>
-            <p>SQL Injection is a code injection technique that exploits vulnerabilities in the database layer.</p>
-            <div class="code-block">-- Vulnerable: $query = "SELECT * FROM users WHERE username = '" . $username . "'";<br>-- Input: admin' --</div>
-            <p><strong>Prevention:</strong> Use parameterised queries, validate input, least privilege.</p>
-            <div style="margin:16px 0;"><p><strong>✅ Knowledge Check: What does <code>--</code> do?</strong></p>
-                <div class="quiz-option" onclick="checkQuiz(this, false)">A) Executes</div>
-                <div class="quiz-option" onclick="checkQuiz(this, true)">B) Comments out</div>
-                <div class="quiz-option" onclick="checkQuiz(this, false)">C) Deletes</div>
-            </div>
-        `, completed: false },
-        { id: 'xss', title: 'Cross‑Site Scripting', desc: 'Identify and mitigate XSS vulnerabilities', icon: 'fa-code', tag: 'Intermediate', premium: false, content: `
-            <h3>Cross‑Site Scripting (XSS)</h3>
-            <p>XSS allows attackers to inject scripts into web pages.</p>
-            <div class="code-block">&lt;script&gt;alert('XSS')&lt;/script&gt;</div>
-            <p><strong>Types:</strong> Stored, Reflected, DOM</p>
-            <div style="margin:16px 0;"><p><strong>✅ Knowledge Check: Which type is stored on the server?</strong></p>
-                <div class="quiz-option" onclick="checkQuiz(this, true)">A) Stored XSS</div>
-                <div class="quiz-option" onclick="checkQuiz(this, false)">B) Reflected XSS</div>
-                <div class="quiz-option" onclick="checkQuiz(this, false)">C) DOM XSS</div>
-            </div>
-        `, completed: false },
-        { id: 'network', title: 'Network Sniffing', desc: 'Analyse and secure network traffic', icon: 'fa-wifi', tag: 'Advanced', premium: false, content: `
-            <h3>Network Sniffing</h3>
-            <p>Capturing and analysing network traffic.</p>
-            <div class="code-block">tcpdump -i eth0</div>
-            <p><strong>Tools:</strong> Wireshark, Tcpdump, BetterCAP</p>
-            <div style="margin:16px 0;"><p><strong>✅ Knowledge Check: Which tool is used for sniffing?</strong></p>
-                <div class="quiz-option" onclick="checkQuiz(this, false)">A) Nmap</div>
-                <div class="quiz-option" onclick="checkQuiz(this, true)">B) Wireshark</div>
-                <div class="quiz-option" onclick="checkQuiz(this, false)">C) Metasploit</div>
-            </div>
-        `, completed: false },
-        { id: 'linux', title: 'Linux Basics', desc: 'Essential Linux commands for security', icon: 'fa-terminal', tag: 'Beginner', premium: false, content: `<h3>Linux Basics</h3><p>Essential commands for security.</p><div class="code-block">ls -la<br>chmod +x script.sh<br>sudo apt update</div>`, completed: false },
-        { id: 'websec', title: 'Web Security', desc: 'Fundamentals of web application security', icon: 'fa-globe', tag: 'Intermediate', premium: false, content: `<h3>Web Security</h3><p>OWASP Top 10 and how to protect web applications.</p>`, completed: false },
-        { id: 'auth', title: 'Authentication', desc: 'Secure login systems and session management', icon: 'fa-lock', tag: 'Intermediate', premium: false, content: `<h3>Authentication</h3><p>Password hashing, multi‑factor authentication, and secure sessions.</p>`, completed: false },
-        { id: 'passwords', title: 'Password Security', desc: 'Create and manage strong passwords', icon: 'fa-key', tag: 'Beginner', premium: false, content: `<h3>Password Security</h3><p>Best practices, hashing algorithms, and avoiding common mistakes.</p>`, completed: false },
-        { id: 'crypto', title: 'Cryptography', desc: 'Encryption, hashing, and digital signatures', icon: 'fa-shield-alt', tag: 'Advanced', premium: true, content: `<h3>Cryptography</h3><p>Symmetric and asymmetric encryption, hashing algorithms, and real‑world applications.</p>`, completed: false },
-        { id: 'forensics', title: 'Digital Forensics', desc: 'Collect and analyse digital evidence', icon: 'fa-search-plus', tag: 'Advanced', premium: true, content: `<h3>Digital Forensics</h3><p>Disk imaging, file carving, and forensic analysis.</p>`, completed: false }
+        // Level 1: Computer Foundations
+        {
+            id: 'computer-foundations',
+            title: 'Computer Foundations',
+            desc: 'How computers work, OS, filesystems, command line, VMs',
+            icon: 'fa-desktop',
+            tag: 'Beginner',
+            premium: false,
+            level: 1,
+            lessons: [
+                { title: 'How Computers Work', text: 'Computers process data using CPU, memory, and storage. The OS manages hardware and software.' },
+                { title: 'Operating Systems', text: 'Windows, Linux, macOS — each has different file systems and security models.' },
+                { title: 'Filesystems', text: 'Files are organised in directories. Linux uses / (root), Windows uses C:\\.' },
+                { title: 'Command Line', text: 'The terminal allows direct control. Commands like ls, cd, mkdir are essential.' },
+                { title: 'Virtual Machines', text: 'VMs let you run multiple OS on one machine. Tools: VirtualBox, VMware.' }
+            ],
+            completed: false
+        },
+        // Level 2: Networking
+        {
+            id: 'networking',
+            title: 'Networking Fundamentals',
+            desc: 'TCP/IP, DNS, DHCP, HTTP/HTTPS, firewalls, VPNs, routing',
+            icon: 'fa-network-wired',
+            tag: 'Beginner',
+            premium: false,
+            level: 2,
+            lessons: [
+                { title: 'TCP/IP Model', text: 'The Internet uses TCP/IP. IP addresses identify devices, ports identify services.' },
+                { title: 'DNS', text: 'DNS translates domain names (google.com) to IP addresses (142.250.190.46).' },
+                { title: 'HTTP/HTTPS', text: 'HTTP is the web protocol. HTTPS adds encryption (SSL/TLS).' },
+                { title: 'Firewalls', text: 'Firewalls filter traffic based on rules. They block or allow ports.' },
+                { title: 'VPNs', text: 'VPNs encrypt traffic and hide your IP. Used for privacy and security.' }
+            ],
+            completed: false
+        },
+        // Level 3: Linux Security
+        {
+            id: 'linux-security',
+            title: 'Linux Security',
+            desc: 'Bash scripting, permissions, processes, services, logs, SSH',
+            icon: 'fa-terminal',
+            tag: 'Intermediate',
+            premium: false,
+            level: 3,
+            lessons: [
+                { title: 'Bash Scripting', text: 'Bash scripts automate tasks. Use variables, loops, and conditionals.' },
+                { title: 'Permissions', text: 'chmod changes permissions. chown changes ownership. Use ls -l to view.' },
+                { title: 'Processes', text: 'ps, top, kill — manage running processes.' },
+                { title: 'Logs', text: 'Logs are stored in /var/log. Use tail -f to watch in real-time.' },
+                { title: 'SSH', text: 'SSH provides secure remote access. Use ssh user@host.' }
+            ],
+            completed: false
+        },
+        // Level 4: Programming for Security
+        {
+            id: 'python-security',
+            title: 'Python for Security',
+            desc: 'Python basics, automation scripts, APIs, regex, data handling',
+            icon: 'fa-python',
+            tag: 'Intermediate',
+            premium: false,
+            level: 4,
+            lessons: [
+                { title: 'Python Basics', text: 'Variables, loops, functions, and conditionals.' },
+                { title: 'Automation Scripts', text: 'Write scripts to automate security tasks like scanning and log analysis.' },
+                { title: 'APIs', text: 'APIs allow programs to communicate. Use requests library to interact with web APIs.' },
+                { title: 'Regex', text: 'Regular expressions match patterns in text. Use re module.' },
+                { title: 'Data Handling', text: 'Read, write, and parse CSV, JSON, and log files.' }
+            ],
+            completed: false
+        },
+        // Level 5: Web Security
+        {
+            id: 'web-security',
+            title: 'Web Security',
+            desc: 'OWASP Top 10, authentication, sessions, secure coding, testing',
+            icon: 'fa-globe',
+            tag: 'Intermediate',
+            premium: false,
+            level: 5,
+            lessons: [
+                { title: 'OWASP Top 10', text: 'The top 10 web security risks. Includes SQLi, XSS, broken access control.' },
+                { title: 'Authentication', text: 'Use bcrypt, MFA, and secure session management.' },
+                { title: 'Sessions', text: 'Sessions maintain state. Use secure cookies with HttpOnly and Secure flags.' },
+                { title: 'Secure Coding', text: 'Validate input, encode output, use prepared statements.' },
+                { title: 'Security Testing', text: 'Test for vulnerabilities using tools like Burp Suite and OWASP ZAP.' }
+            ],
+            completed: false
+        },
+        // Level 6: Defensive Security
+        {
+            id: 'defensive-security',
+            title: 'Defensive Security',
+            desc: 'SOC operations, SIEM, threat hunting, malware basics, incident response',
+            icon: 'fa-shield-alt',
+            tag: 'Advanced',
+            premium: false,
+            level: 6,
+            lessons: [
+                { title: 'SOC Operations', text: 'Security Operations Centers monitor and respond to threats 24/7.' },
+                { title: 'SIEM', text: 'SIEM aggregates logs and alerts on suspicious activity.' },
+                { title: 'Threat Hunting', text: 'Proactively search for threats using hypothesis-driven analysis.' },
+                { title: 'Malware Basics', text: 'Understand viruses, worms, trojans, and ransomware.' },
+                { title: 'Incident Response', text: 'Prepare, detect, contain, eradicate, recover, and learn.' }
+            ],
+            completed: false
+        },
+        // Level 7: Cloud Security
+        {
+            id: 'cloud-security',
+            title: 'Cloud Security',
+            desc: 'AWS security, Azure, IAM, containers, Kubernetes basics',
+            icon: 'fa-cloud',
+            tag: 'Advanced',
+            premium: true,
+            level: 7,
+            lessons: [
+                { title: 'AWS Security', text: 'Use IAM, security groups, and AWS Shield.' },
+                { title: 'Azure Security', text: 'Azure AD, Azure Security Center, and Defender.' },
+                { title: 'IAM', text: 'Identity and Access Management controls who can access what.' },
+                { title: 'Containers', text: 'Docker containers isolate applications. Scan images for vulnerabilities.' },
+                { title: 'Kubernetes Basics', text: 'Kubernetes orchestrates containers. Secure your cluster with RBAC.' }
+            ],
+            completed: false
+        },
+        // Level 8: Professional Preparation
+        {
+            id: 'professional-prep',
+            title: 'Professional Preparation',
+            desc: 'Certifications, resume, interviews, real-world scenarios',
+            icon: 'fa-briefcase',
+            tag: 'Advanced',
+            premium: true,
+            level: 8,
+            lessons: [
+                { title: 'Certifications', text: 'CISSP, CEH, CompTIA Security+, and OSCP.' },
+                { title: 'Resume Building', text: 'Highlight skills, certifications, and hands-on experience.' },
+                { title: 'Interview Preparation', text: 'Practice technical questions and scenario-based responses.' },
+                { title: 'Real-World Scenarios', text: 'Apply skills to real incidents like data breaches and phishing campaigns.' }
+            ],
+            completed: false
+        }
     ];
 
+    // ================================
+    // COMPLETED LESSONS TRACKING
+    // ================================
+    let completedLessons = JSON.parse(localStorage.getItem('evilweb_completed_lessons')) || [];
+
+    // ================================
+    // LABS (Real interactive)
+    // ================================
     const labData = [
-        { id: 'sqli-lab', name: 'SQLi Simulator', icon: 'fa-syringe', status: 'Active', badge: 'Practice', locked: false, premium: false },
-        { id: 'xss-lab', name: 'XSS Sandbox', icon: 'fa-pen-fancy', status: 'Active', badge: 'Exploit', locked: false, premium: false },
-        { id: 'password-lab', name: 'Password Strength', icon: 'fa-key', status: 'Active', badge: 'Analyze', locked: false, premium: false },
-        { id: 'hash-lab', name: 'Hash Identifier', icon: 'fa-fingerprint', status: 'Active', badge: 'Identify', locked: false, premium: false },
-        { id: 'port-lab', name: 'Port Scanner Sim', icon: 'fa-search', status: 'Locked', badge: 'Locked', locked: true, premium: false },
+        { id: 'terminal-lab', name: 'Terminal Simulator', icon: 'fa-terminal', status: 'Active', badge: 'Practice', locked: false, premium: false },
+        { id: 'log-analyzer', name: 'Log Investigator', icon: 'fa-file-alt', status: 'Active', badge: 'Analyze', locked: false, premium: false },
+        { id: 'packet-inspector', name: 'Network Analyzer', icon: 'fa-network-wired', status: 'Active', badge: 'Inspect', locked: false, premium: false },
+        { id: 'ctf-challenge', name: 'CTF Challenge', icon: 'fa-flag', status: 'Active', badge: 'Capture', locked: false, premium: false },
         { id: 'advanced-lab', name: 'Advanced Exploit', icon: 'fa-bug', status: 'Locked', badge: 'Premium', locked: true, premium: true }
     ];
 
@@ -885,7 +1194,8 @@
     let completedCourses = JSON.parse(localStorage.getItem('evilweb_completed')) || [];
     let streak = parseInt(localStorage.getItem('evilweb_streak')) || 0;
     let lastLogin = localStorage.getItem('evilweb_lastlogin') || '';
-    let currentLessonId = null;
+    let currentCourseId = null;
+    let currentLessonIndex = 0;
 
     // ================================
     // PREMIUM FUNCTIONS
@@ -969,7 +1279,7 @@
     }
 
     // ================================
-    // SPLASH (Waits for window.onload)
+    // SPLASH
     // ================================
     window.addEventListener('load', function() {
         const name = 'EVIL WEB';
@@ -1005,11 +1315,14 @@
             splash.style.opacity = '0';
             setTimeout(() => {
                 splash.style.display = 'none';
-                document.getElementById('home').classList.add('active');
-                updatePremiumUI();
-                renderAll();
-                updateProfile();
-
+                // Check if user is logged in
+                if (currentUser) {
+                    document.getElementById('home').classList.add('active');
+                    renderAll();
+                    updateProfile();
+                } else {
+                    document.getElementById('login').classList.add('active');
+                }
                 const today = new Date();
                 const todayStr = today.toDateString();
                 if (lastLogin !== todayStr) {
@@ -1030,9 +1343,46 @@
     });
 
     // ================================
+    // CATEGORIES
+    // ================================
+    function renderCategories() {
+        const bar = document.getElementById('categoryBar');
+        bar.innerHTML = '';
+        courseCategories.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'category-btn' + (cat === activeCategory ? ' active' : '');
+            btn.textContent = cat;
+            btn.onclick = () => {
+                activeCategory = cat;
+                renderAll();
+                renderCategories();
+            };
+            bar.appendChild(btn);
+        });
+    }
+
+    // ================================
+    // COURSE STATS
+    // ================================
+    function updateCourseStats() {
+        const total = allCourses.length;
+        const finished = completedCourses.length;
+        const premiumCount = allCourses.filter(c => c.premium).length;
+        const lvl = calculateLevel();
+        document.getElementById('courseStats').innerHTML = `
+            📚 <strong>Total Courses:</strong> ${total} &nbsp;|&nbsp;
+            🎓 <strong>Completed:</strong> ${finished} &nbsp;|&nbsp;
+            ⭐ <strong>Premium:</strong> ${premiumCount} &nbsp;|&nbsp;
+            🏅 <strong>Level:</strong> ${lvl}
+        `;
+    }
+
+    // ================================
     // RENDER ALL
     // ================================
     function renderAll(filter = '') {
+        updateCourseStats();
+        renderCategories();
         renderCourses(filter);
         renderLabs(filter);
         renderTools(filter);
@@ -1046,18 +1396,17 @@
     // ================================
     // RENDER COURSES
     // ================================
-    function stripHtml(html) {
-        const tmp = document.createElement('div');
-        tmp.innerHTML = html;
-        return tmp.textContent || tmp.innerText || '';
-    }
-
     function renderCourses(filter = '') {
         const container = document.getElementById('courseList');
         container.innerHTML = '';
+
         const filtered = allCourses.filter(c => {
+            if (activeCategory !== 'All') {
+                if (activeCategory === 'Premium' && !c.premium) return false;
+                if (c.tag !== activeCategory && activeCategory !== 'Premium') return false;
+            }
             if (filter) {
-                const searchable = `${c.title} ${c.desc} ${c.tag} ${stripHtml(c.content)}`.toLowerCase();
+                const searchable = `${c.title} ${c.desc} ${c.tag}`.toLowerCase();
                 if (!searchable.includes(filter)) return false;
             }
             return true;
@@ -1096,7 +1445,7 @@
                     showToast('⭐ This course is premium. Unlock it to access.', 'error');
                     return;
                 }
-                openLesson(c.id);
+                openCourse(c.id);
             });
 
             container.appendChild(card);
@@ -1104,17 +1453,19 @@
     }
 
     // ================================
-    // LESSON
+    // OPEN COURSE
     // ================================
-    function openLesson(id) {
-        const course = allCourses.find(c => c.id === id);
+    function openCourse(courseId) {
+        const course = allCourses.find(c => c.id === courseId);
         if (!course) return;
         if (course.premium && !isPremium) {
             showToast('⭐ This course is premium. Unlock it to access.', 'error');
             return;
         }
 
-        // Remove old scroll listener
+        currentCourseId = courseId;
+        currentLessonIndex = 0;
+
         if (scrollListenerActive) {
             const oldContent = document.getElementById('lessonContent');
             if (oldContent) {
@@ -1123,40 +1474,85 @@
             }
         }
 
-        currentLessonId = id;
-        document.getElementById('lessonTitle').textContent = course.title;
-        const p = progress[course.id] || 0;
-        document.getElementById('lessonProgress').textContent = `${p}%`;
-        document.getElementById('lessonContent').innerHTML = course.content + '<div class="scroll-track" id="scrollTrack"></div>';
-
-        if (!progress[course.id]) {
-            progress[course.id] = 10;
-            localStorage.setItem('evilweb_progress', JSON.stringify(progress));
-        }
-
+        renderLesson();
         showScreen('lesson');
+    }
 
-        // Add scroll listener
-        const content = document.getElementById('lessonContent');
-        if (content) {
-            content.addEventListener('scroll', handleScroll);
-            scrollListenerActive = true;
+    function renderLesson() {
+        const course = allCourses.find(c => c.id === currentCourseId);
+        if (!course) return;
+
+        const lesson = course.lessons[currentLessonIndex];
+        const total = course.lessons.length;
+        const p = Math.round(((currentLessonIndex) / total) * 100);
+
+        document.getElementById('lessonTitle').textContent = `${course.title} — Lesson ${currentLessonIndex + 1}`;
+        document.getElementById('lessonProgress').textContent = `${p}%`;
+
+        let html = `
+            <h3>${lesson.title}</h3>
+            <p>${lesson.text}</p>
+            <div class="scroll-track" id="scrollTrack"></div>
+        `;
+
+        // Navigation
+        html += `
+            <div style="display:flex; gap:8px; margin-top:16px;">
+                <button class="btn" style="flex:1; background:var(--bg-surface); color:var(--text-secondary);" onclick="previousLesson()" ${currentLessonIndex === 0 ? 'disabled' : ''}>← Previous</button>
+                <button class="btn" style="flex:1;" onclick="nextLesson()">${currentLessonIndex === total - 1 ? '✅ Complete Course' : 'Next →'}</button>
+            </div>
+        `;
+
+        document.getElementById('lessonContent').innerHTML = html;
+
+        // Mark lesson as viewed
+        const lessonKey = `${currentCourseId}-${currentLessonIndex}`;
+        if (!completedLessons.includes(lessonKey)) {
+            completedLessons.push(lessonKey);
+            localStorage.setItem('evilweb_completed_lessons', JSON.stringify(completedLessons));
+            addXP(10);
+            checkBadge('first_lesson');
+            if (completedLessons.length >= 10) checkBadge('lesson_10');
+        }
+
+        // Update course progress
+        const completedCount = course.lessons.filter((_, idx) => completedLessons.includes(`${currentCourseId}-${idx}`)).length;
+        const prog = Math.round((completedCount / course.lessons.length) * 100);
+        progress[course.id] = prog;
+        localStorage.setItem('evilweb_progress', JSON.stringify(progress));
+    }
+
+    function nextLesson() {
+        const course = allCourses.find(c => c.id === currentCourseId);
+        if (!course) return;
+        if (currentLessonIndex < course.lessons.length - 1) {
+            currentLessonIndex++;
+            renderLesson();
+        } else {
+            if (!completedCourses.includes(currentCourseId)) {
+                completedCourses.push(currentCourseId);
+                localStorage.setItem('evilweb_completed', JSON.stringify(completedCourses));
+                addXP(50);
+                checkBadge('course_complete');
+                if (completedCourses.length === allCourses.length) checkBadge('all_courses');
+                showToast('🎉 Course Completed! Certificate Earned!', 'success');
+                fireConfetti();
+                generateCertificate(course.title);
+            }
+            goHome();
         }
     }
 
-    function handleScroll() {
-        const content = document.getElementById('lessonContent');
-        if (!content) return;
-        const scrollPercent = content.scrollTop / (content.scrollHeight - content.clientHeight);
-        if (scrollPercent > 0.5 && progress[currentLessonId] < 50) {
-            progress[currentLessonId] = 50;
-            localStorage.setItem('evilweb_progress', JSON.stringify(progress));
-            document.getElementById('lessonProgress').textContent = `${progress[currentLessonId]}%`;
+    function previousLesson() {
+        if (currentLessonIndex > 0) {
+            currentLessonIndex--;
+            renderLesson();
         }
     }
+
+    function handleScroll() {}
 
     function goHome() {
-        // Clean up scroll listener
         if (scrollListenerActive) {
             const content = document.getElementById('lessonContent');
             if (content) {
@@ -1170,52 +1566,12 @@
     }
 
     // ================================
-    // QUIZ
-    // ================================
-    function checkQuiz(el, isCorrect) {
-        const parent = el.parentElement;
-        const options = parent.querySelectorAll('.quiz-option');
-        options.forEach(opt => {
-            opt.style.pointerEvents = 'none';
-            if (opt === el) opt.classList.add(isCorrect ? 'correct' : 'wrong');
-        });
-
-        if (isCorrect) {
-            showToast('✅ Correct! Well done.', 'success');
-            const title = document.getElementById('lessonTitle').textContent;
-            const course = allCourses.find(c => c.title === title);
-            if (course && !completedCourses.includes(course.id)) {
-                progress[course.id] = Math.min(100, (progress[course.id] || 0) + 20);
-                localStorage.setItem('evilweb_progress', JSON.stringify(progress));
-                if (progress[course.id] >= 100 && !completedCourses.includes(course.id)) {
-                    completedCourses.push(course.id);
-                    localStorage.setItem('evilweb_completed', JSON.stringify(completedCourses));
-                    showToast('🎉 Course Completed! Certificate Earned!', 'success');
-                    fireConfetti();
-                    renderAll();
-                    updateProfile();
-                    generateCertificate(course.title);
-                }
-                document.getElementById('lessonProgress').textContent = `${progress[course.id]}%`;
-            }
-        } else {
-            showToast('❌ Not quite. Try again.', 'error');
-            setTimeout(() => {
-                options.forEach(opt => {
-                    opt.classList.remove('correct', 'wrong');
-                    opt.style.pointerEvents = 'auto';
-                });
-            }, 1500);
-        }
-    }
-
-    // ================================
-    // CERTIFICATE (PDF via jsPDF)
+    // CERTIFICATE (With QR + Verification)
     // ================================
     function generateCertificate(courseName) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF('landscape', 'mm', 'a4');
-        const name = document.getElementById('profileName').textContent || 'Student';
+        const name = currentUser ? currentUser.name : 'Student';
         const date = new Date().toLocaleDateString();
         const certId = 'EW-' + Date.now().toString(36).toUpperCase();
 
@@ -1253,9 +1609,8 @@
         // Footer
         doc.setFontSize(10);
         doc.setTextColor(100, 100, 100);
-        doc.text('Evil Web — Cyber Lab', 148.5, 195, { align: 'center' });
+        doc.text('Evil Web — Cyber Academy', 148.5, 195, { align: 'center' });
 
-        // Open PDF in new tab
         const pdfBlob = doc.output('blob');
         const url = URL.createObjectURL(pdfBlob);
         window.open(url, '_blank');
@@ -1292,7 +1647,15 @@
             `;
 
             if (isUnlocked) {
-                div.addEventListener('click', () => showToast(`🧪 ${lab.name} — interactive lab coming soon`, 'info'));
+                div.addEventListener('click', () => {
+                    const sims = {
+                        'terminal-lab': '🧪 Terminal Simulator — type commands like `ls`, `pwd`, `cat`',
+                        'log-analyzer': '🧪 Log Investigator — analyze fake logs: `2025-01-01 12:00:00 Failed login from IP 192.168.1.1`',
+                        'packet-inspector': '🧪 Network Analyzer — inspecting packet: `SYN ACK`',
+                        'ctf-challenge': '🧪 CTF Challenge — Find the flag: `FLAG{cyber_secure_2025}`'
+                    };
+                    showToast(sims[lab.id] || `🧪 ${lab.name} — interactive lab`, 'info');
+                });
             } else {
                 div.style.cursor = 'not-allowed';
                 const msg = lab.premium ? '⭐ This lab is premium. Unlock it to access.' : '🔒 Complete 2 courses to unlock this lab.';
@@ -1346,10 +1709,15 @@
     // PROFILE
     // ================================
     function updateProfile() {
-        const done = completedCourses.length;
-        document.getElementById('statCourses').textContent = done;
+        if (!currentUser) return;
+        document.getElementById('profileName').textContent = currentUser.name || 'Student';
+        document.getElementById('profileEmail').textContent = currentUser.email || 'student@email.com';
+        document.getElementById('statCourses').textContent = completedCourses.length;
         document.getElementById('statLabs').textContent = labData.filter(l => (!l.locked || completedCourses.length >= 2) && (!l.premium || isPremium)).length;
         document.getElementById('statStreak').textContent = streak;
+        document.getElementById('statXP').textContent = xp;
+        document.getElementById('statLevel').textContent = calculateLevel();
+        document.getElementById('statBadges').textContent = badges.length;
     }
 
     // ================================
@@ -1458,12 +1826,16 @@
     // DEV LOG
     // ================================
     console.log(`🖥️ ${APP_CONFIG.appName} — Developed by Mr Dracula | Evil Tech`);
-    console.log('🔐 Learn. Practice. Exploit. Improve.');
-    console.log(`📚 ${completedCourses.length}/${allCourses.filter(c => !c.premium || isPremium).length} courses completed`);
+    console.log('🔐 Learn. Defend. Analyze. Secure.');
+    console.log(`📚 ${completedCourses.length}/${allCourses.length} courses completed`);
     console.log(`🔥 ${streak} day streak`);
     console.log(`⭐ Premium: ${isPremium ? 'ACTIVE' : 'INACTIVE'}`);
+    console.log(`🏅 XP: ${xp} | Level: ${calculateLevel()}`);
     console.log(`📞 Contact: ${APP_CONFIG.contactPhone}`);
+    if (currentUser) {
+        console.log(`👤 Logged in as: ${currentUser.name} (${currentUser.email})`);
+    }
 </script>
 
 </body>
-</html>
+                                                                                                     </html>
