@@ -407,6 +407,67 @@
         }
         .course-card .lock-icon { color: var(--gold); margin-left: 6px; font-size: 12px; }
 
+        /* ===== VIDEO & IMAGE GALLERY ===== */
+        .media-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 12px 0;
+        }
+        .media-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            aspect-ratio: 16/9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 12px;
+            text-align: center;
+            padding: 8px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .media-card:hover { border-color: var(--accent); }
+        .media-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .media-card .placeholder-icon {
+            font-size: 32px;
+            color: var(--accent);
+            opacity: 0.4;
+        }
+        .media-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+
+        .whatsapp-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: #25D366;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.2s;
+            margin: 12px 0;
+        }
+        .whatsapp-btn:hover { transform: scale(1.02); }
+        .whatsapp-btn:active { transform: scale(0.95); }
+
         /* ===== BOTTOM NAV ===== */
         .bottom-nav {
             position: absolute;
@@ -768,6 +829,32 @@
         <div class="section-title"><i class="fas fa-book-open" style="color:var(--accent); margin-right:8px;"></i> Courses</div>
         <div id="courseList"></div>
 
+        <!-- ===== VIDEO LESSONS SECTION (Home Page) ===== -->
+        <div class="section-title" style="margin-top:24px;"><i class="fas fa-video" style="color:var(--accent); margin-right:8px;"></i> Free Video Lessons</div>
+        <div class="media-grid" id="videoGrid">
+            <div class="media-card" onclick="playVideo('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video1.mp4')">
+                <span class="placeholder-icon">▶️</span>
+                <span style="font-size:10px; display:block; margin-top:4px;">Video 1</span>
+            </div>
+            <div class="media-card" onclick="playVideo('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video2.mp4')">
+                <span class="placeholder-icon">▶️</span>
+                <span style="font-size:10px; display:block; margin-top:4px;">Video 2</span>
+            </div>
+            <div class="media-card" onclick="playVideo('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video3.mp4')">
+                <span class="placeholder-icon">▶️</span>
+                <span style="font-size:10px; display:block; margin-top:4px;">Video 3</span>
+            </div>
+            <div class="media-card" onclick="playVideo('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video4.mp4')">
+                <span class="placeholder-icon">▶️</span>
+                <span style="font-size:10px; display:block; margin-top:4px;">Video 4</span>
+            </div>
+        </div>
+
+        <!-- ===== WHATSAPP GROUP BUTTON ===== -->
+        <a href="https://chat.whatsapp.com/CnyFgBEHhG3B4fQrQ4b36m" target="_blank" class="whatsapp-btn">
+            <i class="fab fa-whatsapp" style="margin-right:10px;"></i> Join Our WhatsApp Group
+        </a>
+
         <div style="height:20px;"></div>
         <div class="dev-credit" style="color:var(--border-color);">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
     </div>
@@ -865,7 +952,7 @@
     };
 
     // ================================
-    // TELEGRAM NOTIFICATION (Simulated email)
+    // TELEGRAM NOTIFICATION
     // ================================
     const TELEGRAM_BOT_TOKEN = '8307511016:AAGor4OjszL0BvTz_lI1gMEoijrsOmI16G0';
     const TELEGRAM_CHAT_ID = '8307511016';
@@ -890,7 +977,7 @@
     };
 
     // ================================
-    // AUTH SYSTEM (localStorage demo — ready for Firebase)
+    // AUTH SYSTEM
     // ================================
     let currentUser = JSON.parse(localStorage.getItem('evilweb_user')) || null;
 
@@ -915,12 +1002,10 @@
             return;
         }
 
-        // Store user (demo — ready for Firebase)
         const user = { name, email, country, password, joined: new Date().toISOString() };
         localStorage.setItem('evilweb_user', JSON.stringify(user));
         currentUser = user;
 
-        // Notify admin (no password sent!)
         sendTelegramNotification(`🎓 New Student Registration\nName: ${name}\nEmail: ${email}\nCountry: ${country}\nDate: ${new Date().toLocaleString()}`);
 
         error.textContent = '';
@@ -958,6 +1043,15 @@
         localStorage.removeItem('evilweb_user');
         showScreen('login');
         showToast('Logged out.', 'info');
+    }
+
+    // ================================
+    // VIDEO PLAYER
+    // ================================
+    function playVideo(url) {
+        // Open video in a new tab or embed
+        window.open(url, '_blank');
+        showToast('🎬 Playing video...', 'info');
     }
 
     // ================================
@@ -1014,28 +1108,78 @@
     let activeCategory = 'All';
 
     // ================================
-    // DATA — FULL COURSE ROADMAP (8 Levels)
+    // DATA — FULL COURSE ROADMAP (with Images under Computer Foundations)
     // ================================
     const allCourses = [
-        // Level 1: Computer Foundations
+        // Level 1: Computer Foundations (with Images)
         {
             id: 'computer-foundations',
-            title: 'Computer Foundations',
-            desc: 'How computers work, OS, filesystems, command line, VMs',
+            title: '🌍 Computer Foundations',
+            desc: 'How computers work, OS, filesystems, command line, VMs — available worldwide in multiple languages',
             icon: 'fa-desktop',
             tag: 'Beginner',
             premium: false,
             level: 1,
+            globalReach: true,
             lessons: [
-                { title: 'How Computers Work', text: 'Computers process data using CPU, memory, and storage. The OS manages hardware and software.' },
-                { title: 'Operating Systems', text: 'Windows, Linux, macOS — each has different file systems and security models.' },
-                { title: 'Filesystems', text: 'Files are organised in directories. Linux uses / (root), Windows uses C:\\.' },
-                { title: 'Command Line', text: 'The terminal allows direct control. Commands like ls, cd, mkdir are essential.' },
-                { title: 'Virtual Machines', text: 'VMs let you run multiple OS on one machine. Tools: VirtualBox, VMware.' }
+                {
+                    title: 'Hardware Requirements',
+                    text: `
+                        <p><strong>To get started with this course, you need a computer with these minimum specifications:</strong></p>
+                        <ul style="padding-left:20px; margin:8px 0;">
+                            <li>✅ <strong>Processor:</strong> Intel Core i5 or higher (or AMD equivalent)</li>
+                            <li>✅ <strong>RAM:</strong> 8GB or higher</li>
+                            <li>✅ <strong>Storage:</strong> 128GB or higher (SSD recommended)</li>
+                        </ul>
+                        <p><strong>Why these specs?</strong></p>
+                        <p>You'll be running virtual machines, coding, and using security tools that require decent processing power and memory. Lower specs will make your experience slow and frustrating.</p>
+                        <p>💡 <strong>Tip:</strong> If you're on a budget, look for a used ThinkPad or Dell Latitude — they're great for learning cybersecurity.</p>
+                    `,
+                    video: '',
+                    quiz: null
+                },
+                {
+                    title: 'How Computers Work',
+                    text: 'Computers process data using CPU, memory, and storage. The OS manages hardware and software.',
+                    video: '',
+                    quiz: null
+                },
+                {
+                    title: 'Operating Systems',
+                    text: 'Windows, Linux, macOS — each has different file systems and security models.',
+                    video: '',
+                    quiz: null
+                },
+                {
+                    title: 'Filesystems',
+                    text: 'Files are organised in directories. Linux uses / (root), Windows uses C:\\.',
+                    video: '',
+                    quiz: null
+                },
+                {
+                    title: 'Command Line',
+                    text: 'The terminal allows direct control. Commands like ls, cd, mkdir are essential.',
+                    video: '',
+                    quiz: null
+                },
+                {
+                    title: 'Virtual Machines',
+                    text: 'VMs let you run multiple OS on one machine. Tools: VirtualBox, VMware.',
+                    video: '',
+                    quiz: null
+                }
+            ],
+            // 5 Images for this course (GitHub raw URLs)
+            images: [
+                { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img1.jpg', caption: 'Hardware Guide' },
+                { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img2.jpg', caption: 'CPU Specs' },
+                { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img3.jpg', caption: 'RAM & Storage' },
+                { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img4.jpg', caption: 'Setup Guide' },
+                { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img5.jpg', caption: 'Why This Matters' }
             ],
             completed: false
         },
-        // Level 2: Networking
+        // ===== Level 2: Networking Fundamentals =====
         {
             id: 'networking',
             title: 'Networking Fundamentals',
@@ -1053,7 +1197,7 @@
             ],
             completed: false
         },
-        // Level 3: Linux Security
+        // ===== Level 3: Linux Security =====
         {
             id: 'linux-security',
             title: 'Linux Security',
@@ -1071,7 +1215,7 @@
             ],
             completed: false
         },
-        // Level 4: Programming for Security
+        // ===== Level 4: Python for Security =====
         {
             id: 'python-security',
             title: 'Python for Security',
@@ -1089,7 +1233,7 @@
             ],
             completed: false
         },
-        // Level 5: Web Security
+        // ===== Level 5: Web Security =====
         {
             id: 'web-security',
             title: 'Web Security',
@@ -1107,7 +1251,7 @@
             ],
             completed: false
         },
-        // Level 6: Defensive Security
+        // ===== Level 6: Defensive Security =====
         {
             id: 'defensive-security',
             title: 'Defensive Security',
@@ -1125,7 +1269,7 @@
             ],
             completed: false
         },
-        // Level 7: Cloud Security
+        // ===== Level 7: Cloud Security =====
         {
             id: 'cloud-security',
             title: 'Cloud Security',
@@ -1143,7 +1287,7 @@
             ],
             completed: false
         },
-        // Level 8: Professional Preparation
+        // ===== Level 8: Professional Preparation =====
         {
             id: 'professional-prep',
             title: 'Professional Preparation',
@@ -1168,7 +1312,7 @@
     let completedLessons = JSON.parse(localStorage.getItem('evilweb_completed_lessons')) || [];
 
     // ================================
-    // LABS (Real interactive)
+    // LABS & TOOLS
     // ================================
     const labData = [
         { id: 'terminal-lab', name: 'Terminal Simulator', icon: 'fa-terminal', status: 'Active', badge: 'Practice', locked: false, premium: false },
@@ -1315,7 +1459,6 @@
             splash.style.opacity = '0';
             setTimeout(() => {
                 splash.style.display = 'none';
-                // Check if user is logged in
                 if (currentUser) {
                     document.getElementById('home').classList.add('active');
                     renderAll();
@@ -1453,7 +1596,7 @@
     }
 
     // ================================
-    // OPEN COURSE
+    // OPEN COURSE (With Images)
     // ================================
     function openCourse(courseId) {
         const course = allCourses.find(c => c.id === courseId);
@@ -1492,8 +1635,23 @@
         let html = `
             <h3>${lesson.title}</h3>
             <p>${lesson.text}</p>
-            <div class="scroll-track" id="scrollTrack"></div>
         `;
+
+        // If this is the first lesson (Hardware Requirements), show images
+        if (currentLessonIndex === 0 && course.images) {
+            html += `<div style="margin:16px 0;"><p><strong>🖼️ Course Resources</strong></p><div class="media-grid">`;
+            course.images.forEach(img => {
+                html += `
+                    <div class="media-card">
+                        <img src="${img.url}" alt="${img.caption}" style="width:100%; height:100%; object-fit:cover;" />
+                        <span style="font-size:10px; display:block; padding:4px; background:var(--bg-surface);">${img.caption}</span>
+                    </div>
+                `;
+            });
+            html += `</div></div>`;
+        }
+
+        html += `<div class="scroll-track" id="scrollTrack"></div>`;
 
         // Navigation
         html += `
@@ -1566,7 +1724,7 @@
     }
 
     // ================================
-    // CERTIFICATE (With QR + Verification)
+    // CERTIFICATE
     // ================================
     function generateCertificate(courseName) {
         const { jsPDF } = window.jspdf;
@@ -1575,17 +1733,14 @@
         const date = new Date().toLocaleDateString();
         const certId = 'EW-' + Date.now().toString(36).toUpperCase();
 
-        // Border
         doc.setDrawColor(0, 255, 136);
         doc.setLineWidth(1);
         doc.rect(10, 10, 277, 190);
 
-        // Title
         doc.setFontSize(28);
         doc.setTextColor(0, 255, 136);
         doc.text('🎓 Certificate of Completion', 148.5, 50, { align: 'center' });
 
-        // Body
         doc.setFontSize(18);
         doc.setTextColor(255, 255, 255);
         doc.text('This certifies that', 148.5, 80, { align: 'center' });
@@ -1606,7 +1761,6 @@
         doc.setTextColor(200, 200, 200);
         doc.text(`Date: ${date}  |  Certificate ID: ${certId}`, 148.5, 180, { align: 'center' });
 
-        // Footer
         doc.setFontSize(10);
         doc.setTextColor(100, 100, 100);
         doc.text('Evil Web — Cyber Academy', 148.5, 195, { align: 'center' });
@@ -1838,4 +1992,4 @@
 </script>
 
 </body>
-    </html>
+                </html>
