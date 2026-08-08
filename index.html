@@ -407,131 +407,121 @@
         }
         .course-card .lock-icon { color: var(--gold); margin-left: 6px; font-size: 12px; }
 
-        /* ===== VIDEO & IMAGE GALLERY ===== */
-        .media-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 12px 0;
+        /* ===== LEARNING RESOURCES ===== */
+        .learning-resources {
+            max-width: 100%;
+            margin: 40px 0 20px;
+            padding: 0;
         }
-        .media-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            aspect-ratio: 16/9;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            font-size: 12px;
+        .resources-header {
             text-align: center;
-            padding: 8px;
-            transition: 0.2s;
-            cursor: pointer;
+            margin-bottom: 24px;
         }
-        .media-card:hover { border-color: var(--accent); }
-        .media-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .media-card .placeholder-icon {
-            font-size: 32px;
+        .resources-label {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            opacity: 0.7;
             color: var(--accent);
-            opacity: 0.4;
         }
-
-        /* ===== VIDEO PLAYER (Inline) ===== */
-        .video-wrapper {
-            width: 100%;
-            border-radius: var(--radius);
-            overflow: hidden;
-            margin: 8px 0;
-            background: #000;
-            position: relative;
-            aspect-ratio: 16/9;
+        .resources-header h2 {
+            margin: 0 0 8px;
+            font-size: 22px;
+            color: var(--text-primary);
         }
-        .video-wrapper video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
+        .resources-header p {
+            max-width: 100%;
+            margin: auto;
+            line-height: 1.6;
+            opacity: 0.7;
+            font-size: 14px;
+            color: var(--text-secondary);
         }
-        .video-wrapper .play-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 48px;
-            color: #fff;
-            opacity: 0.8;
-            cursor: pointer;
-            background: rgba(0,0,0,0.5);
-            border-radius: 50%;
-            width: 72px;
-            height: 72px;
+        .resource-list {
+            display: grid;
+            gap: 10px;
+        }
+        .resource-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        .video-wrapper .play-btn:hover { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-
-        /* ===== IMAGE ANIMATION (Pull Up) ===== */
-        .image-card {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            transform: translateY(40px);
-            opacity: 0;
-            animation: pullUp 0.8s ease forwards;
-        }
-        .image-card:nth-child(1) { animation-delay: 0.1s; }
-        .image-card:nth-child(2) { animation-delay: 0.2s; }
-        .image-card:nth-child(3) { animation-delay: 0.3s; }
-        .image-card:nth-child(4) { animation-delay: 0.4s; }
-        .image-card:nth-child(5) { animation-delay: 0.5s; }
-
-        @keyframes pullUp {
-            0% { transform: translateY(40px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
-        }
-
-        .image-card img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-        }
-        .image-card .caption {
-            padding: 8px 12px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-align: center;
-            background: var(--bg-surface);
-        }
-
-        .whatsapp-btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background: #25D366;
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
             text-decoration: none;
-            transition: 0.2s;
-            margin: 12px 0;
+            color: inherit;
+            background: rgba(255,255,255,0.02);
+            transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
         }
-        .whatsapp-btn:hover { transform: scale(1.02); }
-        .whatsapp-btn:active { transform: scale(0.95); }
+        .resource-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0,255,136,0.4);
+            background: rgba(0,255,136,0.04);
+        }
+        .resource-number {
+            min-width: 32px;
+            font-size: 12px;
+            font-weight: 800;
+            opacity: 0.4;
+            color: var(--text-secondary);
+        }
+        .resource-content {
+            flex: 1;
+        }
+        .resource-content h3 {
+            margin: 0 0 4px;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+        .resource-content p {
+            margin: 0 0 6px;
+            line-height: 1.5;
+            opacity: 0.65;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .resource-content span {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* ===== TOOLS (Updated) ===== */
+        .tool-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-card);
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+        .tool-item:hover {
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+        .tool-item:active { transform: scale(0.97); }
+        .tool-item .icon {
+            font-size: 18px;
+            color: var(--accent);
+            width: 28px;
+            text-align: center;
+        }
+        .tool-item .name {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .tool-item .arrow {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
 
         /* ===== BOTTOM NAV ===== */
         .bottom-nav {
@@ -667,34 +657,6 @@
         .lab-card .badge.locked { background: rgba(255, 59, 48, 0.08); color: var(--danger); }
         .lab-card .badge.premium { background: var(--gold); color: #0D1117; }
         .lab-card .lock-icon { color: var(--gold); font-size: 12px; margin-left: 4px; }
-
-        /* ===== TOOLS ===== */
-        .tool-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--bg-card);
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: 0.25s ease;
-        }
-        .tool-item:hover { border-color: var(--accent); transform: translateX(4px); }
-        .tool-item:active { transform: scale(0.97); }
-        .tool-item .icon { font-size: 18px; color: var(--accent); width: 24px; text-align: center; }
-        .tool-item .name { flex: 1; font-size: 14px; color: var(--text-primary); }
-        .tool-item .arrow { color: var(--text-secondary); font-size: 14px; }
-        .tool-item .premium-tag {
-            font-size: 9px;
-            background: var(--gold);
-            color: #0D1117;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: 700;
-        }
-        .tool-item .lock-icon { color: var(--gold); font-size: 12px; margin-left: 4px; }
 
         /* ===== PROFILE ===== */
         .profile-avatar {
@@ -874,7 +836,7 @@
         <div class="dev-credit" style="color:var(--border-color); margin-top:20px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
     </div>
 
-    <!-- ========== HOME ========== -->
+    <!-- ========== HOME (Only Learning Resources) ========== -->
     <div class="screen" id="home">
         <div class="home-header">
             <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -886,45 +848,141 @@
             </div>
         </div>
 
-        <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search courses..." oninput="filterAll()" />
+        <!-- ===== LEARNING RESOURCES (No Videos, No Images, No Courses) ===== -->
+        <section class="learning-resources" id="learning-resources">
+            <div class="resources-header">
+                <span class="resources-label">FREE LEARNING</span>
+                <h2>Learn Coding & Development</h2>
+                <p>
+                    Explore free tutorials, interactive courses, documentation,
+                    and practical resources from trusted learning platforms.
+                </p>
+            </div>
 
-        <div class="category-bar" id="categoryBar"></div>
-        <div class="course-stats" id="courseStats"></div>
-
-        <div class="section-title"><i class="fas fa-book-open" style="color:var(--accent); margin-right:8px;"></i> Courses</div>
-        <div id="courseList"></div>
-
-        <!-- ===== VIDEO LESSONS SECTION (Home Page) — Inline Videos ===== -->
-        <div class="section-title" style="margin-top:24px;"><i class="fas fa-video" style="color:var(--accent); margin-right:8px;"></i> Free Video Lessons</div>
-
-        <div class="video-wrapper">
-            <video id="video1" muted playsinline autoplay loop>
-                <source src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video1.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
-            <div class="play-btn" onclick="togglePlay('video1')">▶</div>
-        </div>
-
-        <div class="video-wrapper">
-            <video id="video2" muted playsinline autoplay loop>
-                <source src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video2.mp4" type="video/mp4" />
-            </video>
-            <div class="play-btn" onclick="togglePlay('video2')">▶</div>
-        </div>
-
-        <div class="video-wrapper">
-            <video id="video3" muted playsinline autoplay loop>
-                <source src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video3.mp4" type="video/mp4" />
-            </video>
-            <div class="play-btn" onclick="togglePlay('video3')">▶</div>
-        </div>
-
-        <div class="video-wrapper">
-            <video id="video4" muted playsinline autoplay loop>
-                <source src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/video4.mp4" type="video/mp4" />
-            </video>
-            <div class="play-btn" onclick="togglePlay('video4')">▶</div>
-        </div>
+            <div class="resource-list">
+                <!-- 15 resource items -->
+                <a class="resource-item" href="https://html.com/" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">01</div>
+                    <div class="resource-content">
+                        <h3>HTML</h3>
+                        <p>Learn HTML from the basics, including page structure, elements, attributes, text, links, images, lists and tables.</p>
+                        <span>html.com →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://web.dev/learn/css/" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">02</div>
+                    <div class="resource-content">
+                        <h3>CSS</h3>
+                        <p>Learn modern CSS concepts including the box model, selectors, nesting, the cascade and web styling.</p>
+                        <span>web.dev/learn/css →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://javascript.info/" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">03</div>
+                    <div class="resource-content">
+                        <h3>JavaScript</h3>
+                        <p>A modern JavaScript tutorial covering the language from beginner fundamentals through advanced concepts.</p>
+                        <span>javascript.info →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://react.dev/learn" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">04</div>
+                    <div class="resource-content">
+                        <h3>React</h3>
+                        <p>Learn React components, markup, styling, data, conditions, lists, events and state.</p>
+                        <span>react.dev/learn →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://learnvue.co/" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">05</div>
+                    <div class="resource-content">
+                        <h3>Vue</h3>
+                        <p>Explore Vue learning resources, written tutorials, coding challenges and practical lessons.</p>
+                        <span>learnvue.co →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://angular.dev/tutorials" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">06</div>
+                    <div class="resource-content">
+                        <h3>Angular</h3>
+                        <p>Learn Angular through interactive tutorials covering the framework's core concepts and application development.</p>
+                        <span>angular.dev/tutorials →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://git-scm.com/book/en/v2" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">07</div>
+                    <div class="resource-content">
+                        <h3>Git</h3>
+                        <p>Learn Git and version control using the official Pro Git book and its practical examples.</p>
+                        <span>git-scm.com/book →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://learnweb3.io/" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">08</div>
+                    <div class="resource-content">
+                        <h3>Web3</h3>
+                        <p>Explore free Web3 education covering blockchain development and related technologies.</p>
+                        <span>learnweb3.io →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://www.learnpython.org/" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">09</div>
+                    <div class="resource-content">
+                        <h3>Python</h3>
+                        <p>Start learning Python with an interactive tutorial and practical programming exercises.</p>
+                        <span>learnpython.org →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://www.w3schools.com/sql/" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">10</div>
+                    <div class="resource-content">
+                        <h3>SQL</h3>
+                        <p>Learn SQL and practice working with databases, queries and database concepts.</p>
+                        <span>w3schools.com/sql →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://cryptozombies.io/" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">11</div>
+                    <div class="resource-content">
+                        <h3>Blockchain & Solidity</h3>
+                        <p>Learn blockchain development through interactive Solidity lessons and hands-on coding exercises.</p>
+                        <span>cryptozombies.io →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://nextjs.org/learn" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">12</div>
+                    <div class="resource-content">
+                        <h3>Next.js</h3>
+                        <p>Build a complete web application while learning Next.js foundations, React concepts, styling and more.</p>
+                        <span>nextjs.org/learn →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://www.elementsofai.com/" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">13</div>
+                    <div class="resource-content">
+                        <h3>AI Basics</h3>
+                        <p>Explore introductory artificial intelligence concepts and build a foundation for understanding AI.</p>
+                        <span>elementsofai.com →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://phptherightway.com/" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">14</div>
+                    <div class="resource-content">
+                        <h3>PHP</h3>
+                        <p>Learn PHP development practices, coding standards, databases, security, testing and application architecture.</p>
+                        <span>phptherightway.com →</span>
+                    </div>
+                </a>
+                <a class="resource-item" href="https://nodejs.org/learn" target="_blank" rel="noopener noreferrer">
+                    <div class="resource-number">15</div>
+                    <div class="resource-content">
+                        <h3>Node.js</h3>
+                        <p>Learn Node.js fundamentals, npm, HTTP, files, asynchronous programming, networking and security.</p>
+                        <span>nodejs.org/learn →</span>
+                    </div>
+                </a>
+            </div>
+        </section>
 
         <!-- ===== WHATSAPP GROUP BUTTON ===== -->
         <a href="https://chat.whatsapp.com/CnyFgBEHhG3B4fQrQ4b36m" target="_blank" class="whatsapp-btn">
@@ -956,13 +1014,27 @@
         <div class="dev-credit" style="color:var(--border-color); margin-top:20px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
     </div>
 
-    <!-- ========== TOOLS ========== -->
+    <!-- ========== TOOLS (Updated) ========== -->
     <div class="screen" id="tools">
         <div class="home-header">
             <div class="title"><i class="fas fa-tools" style="color:var(--accent); margin-right:8px;"></i> Tools</div>
             <div class="sub">Essential cybersecurity tools</div>
         </div>
-        <div id="toolList"></div>
+        <div class="tool-item" onclick="showToast('🔍 Port Scanner — coming soon', 'info')">
+            <span class="icon"><i class="fas fa-search"></i></span>
+            <span class="name">Port Scanner</span>
+            <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+        </div>
+        <div class="tool-item" onclick="showToast('🧨 SQLi Helper — coming soon', 'info')">
+            <span class="icon"><i class="fas fa-bolt"></i></span>
+            <span class="name">SQLi Helper</span>
+            <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+        </div>
+        <div class="tool-item" onclick="showToast('🎯 XSS Tester — coming soon', 'info')">
+            <span class="icon"><i class="fas fa-bullseye"></i></span>
+            <span class="name">XSS Tester</span>
+            <span class="arrow"><i class="fas fa-chevron-right"></i></span>
+        </div>
         <div class="dev-credit" style="color:var(--border-color); margin-top:20px;">Developed by <span style="color:var(--accent);">Mr Dracula | Evil Tech</span></div>
     </div>
 
@@ -1122,36 +1194,6 @@
     }
 
     // ================================
-    // VIDEO PLAYER (Inline)
-    // ================================
-    let activeVideo = null;
-
-    function togglePlay(videoId) {
-        const video = document.getElementById(videoId);
-        if (!video) return;
-
-        if (video.paused) {
-            // If another video is playing, pause it
-            if (activeVideo && activeVideo !== video) {
-                activeVideo.pause();
-                const prevBtn = activeVideo.parentElement.querySelector('.play-btn');
-                if (prevBtn) prevBtn.textContent = '▶';
-            }
-            video.play();
-            activeVideo = video;
-            const btn = video.parentElement.querySelector('.play-btn');
-            if (btn) btn.textContent = '⏸';
-            // Unmute when user clicks play
-            video.muted = false;
-        } else {
-            video.pause();
-            const btn = video.parentElement.querySelector('.play-btn');
-            if (btn) btn.textContent = '▶';
-            activeVideo = null;
-        }
-    }
-
-    // ================================
     // COURSE CATEGORIES
     // ================================
     const courseCategories = ['All', 'Beginner', 'Intermediate', 'Advanced', 'Premium'];
@@ -1205,10 +1247,9 @@
     let activeCategory = 'All';
 
     // ================================
-    // DATA — FULL COURSE ROADMAP (with Images & Pull-Up Animation)
+    // ALL COURSES (Kept for lesson functionality)
     // ================================
     const allCourses = [
-        // Level 1: Computer Foundations (with Images)
         {
             id: 'computer-foundations',
             title: '🌍 Computer Foundations',
@@ -1219,64 +1260,15 @@
             level: 1,
             globalReach: true,
             lessons: [
-                {
-                    title: 'Hardware Requirements',
-                    text: `
-                        <p><strong>To get started with this course, you need a computer with these minimum specifications:</strong></p>
-                        <ul style="padding-left:20px; margin:8px 0;">
-                            <li>✅ <strong>Processor:</strong> Intel Core i5 or higher (or AMD equivalent)</li>
-                            <li>✅ <strong>RAM:</strong> 8GB or higher</li>
-                            <li>✅ <strong>Storage:</strong> 128GB or higher (SSD recommended)</li>
-                        </ul>
-                        <p><strong>Why these specs?</strong></p>
-                        <p>You'll be running virtual machines, coding, and using security tools that require decent processing power and memory. Lower specs will make your experience slow and frustrating.</p>
-                        <p>💡 <strong>Tip:</strong> If you're on a budget, look for a used ThinkPad or Dell Latitude — they're great for learning cybersecurity.</p>
-                    `,
-                    video: '',
-                    quiz: null
-                },
-                {
-                    title: 'How Computers Work',
-                    text: 'Computers process data using CPU, memory, and storage. The OS manages hardware and software.',
-                    video: '',
-                    quiz: null
-                },
-                {
-                    title: 'Operating Systems',
-                    text: 'Windows, Linux, macOS — each has different file systems and security models.',
-                    video: '',
-                    quiz: null
-                },
-                {
-                    title: 'Filesystems',
-                    text: 'Files are organised in directories. Linux uses / (root), Windows uses C:\\.',
-                    video: '',
-                    quiz: null
-                },
-                {
-                    title: 'Command Line',
-                    text: 'The terminal allows direct control. Commands like ls, cd, mkdir are essential.',
-                    video: '',
-                    quiz: null
-                },
-                {
-                    title: 'Virtual Machines',
-                    text: 'VMs let you run multiple OS on one machine. Tools: VirtualBox, VMware.',
-                    video: '',
-                    quiz: null
-                }
-            ],
-            // 5 Images with Pull-Up Animation (via CSS)
-            images: [
-                { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img1.jpg', caption: 'Hardware Guide' },
-                { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img2.jpg', caption: 'CPU Specs' },
-                { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img3.jpg', caption: 'RAM & Storage' },
-                { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img4.jpg', caption: 'Setup Guide' },
-                { url: 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/uploads/img5.jpg', caption: 'Why This Matters' }
+                { title: 'Hardware Requirements', text: `<p><strong>To get started with this course, you need a computer with these minimum specifications:</strong></p><ul style="padding-left:20px; margin:8px 0;"><li>✅ <strong>Processor:</strong> Intel Core i5 or higher (or AMD equivalent)</li><li>✅ <strong>RAM:</strong> 8GB or higher</li><li>✅ <strong>Storage:</strong> 128GB or higher (SSD recommended)</li></ul><p><strong>Why these specs?</strong></p><p>You'll be running virtual machines, coding, and using security tools that require decent processing power and memory. Lower specs will make your experience slow and frustrating.</p><p>💡 <strong>Tip:</strong> If you're on a budget, look for a used ThinkPad or Dell Latitude — they're great for learning cybersecurity.</p>`, video: '', quiz: null },
+                { title: 'How Computers Work', text: 'Computers process data using CPU, memory, and storage. The OS manages hardware and software.', video: '', quiz: null },
+                { title: 'Operating Systems', text: 'Windows, Linux, macOS — each has different file systems and security models.', video: '', quiz: null },
+                { title: 'Filesystems', text: 'Files are organised in directories. Linux uses / (root), Windows uses C:\\.', video: '', quiz: null },
+                { title: 'Command Line', text: 'The terminal allows direct control. Commands like ls, cd, mkdir are essential.', video: '', quiz: null },
+                { title: 'Virtual Machines', text: 'VMs let you run multiple OS on one machine. Tools: VirtualBox, VMware.', video: '', quiz: null }
             ],
             completed: false
         },
-        // ===== Level 2: Networking Fundamentals =====
         {
             id: 'networking',
             title: 'Networking Fundamentals',
@@ -1294,7 +1286,6 @@
             ],
             completed: false
         },
-        // ===== Level 3: Linux Security =====
         {
             id: 'linux-security',
             title: 'Linux Security',
@@ -1312,7 +1303,6 @@
             ],
             completed: false
         },
-        // ===== Level 4: Python for Security =====
         {
             id: 'python-security',
             title: 'Python for Security',
@@ -1330,7 +1320,6 @@
             ],
             completed: false
         },
-        // ===== Level 5: Web Security =====
         {
             id: 'web-security',
             title: 'Web Security',
@@ -1348,7 +1337,6 @@
             ],
             completed: false
         },
-        // ===== Level 6: Defensive Security =====
         {
             id: 'defensive-security',
             title: 'Defensive Security',
@@ -1366,7 +1354,6 @@
             ],
             completed: false
         },
-        // ===== Level 7: Cloud Security =====
         {
             id: 'cloud-security',
             title: 'Cloud Security',
@@ -1384,7 +1371,6 @@
             ],
             completed: false
         },
-        // ===== Level 8: Professional Preparation =====
         {
             id: 'professional-prep',
             title: 'Professional Preparation',
@@ -1404,28 +1390,28 @@
     ];
 
     // ================================
-    // COMPLETED LESSONS TRACKING
+    // COMPLETED LESSONS
     // ================================
     let completedLessons = JSON.parse(localStorage.getItem('evilweb_completed_lessons')) || [];
 
     // ================================
-    // LABS & TOOLS
+    // LAB DATA
     // ================================
     const labData = [
-        { id: 'terminal-lab', name: 'Terminal Simulator', icon: 'fa-terminal', status: 'Active', badge: 'Practice', locked: false, premium: false },
-        { id: 'log-analyzer', name: 'Log Investigator', icon: 'fa-file-alt', status: 'Active', badge: 'Analyze', locked: false, premium: false },
-        { id: 'packet-inspector', name: 'Network Analyzer', icon: 'fa-network-wired', status: 'Active', badge: 'Inspect', locked: false, premium: false },
-        { id: 'ctf-challenge', name: 'CTF Challenge', icon: 'fa-flag', status: 'Active', badge: 'Capture', locked: false, premium: false },
-        { id: 'advanced-lab', name: 'Advanced Exploit', icon: 'fa-bug', status: 'Locked', badge: 'Premium', locked: true, premium: true }
+        { id: 'terminal-lab', name: 'Terminal Simulator', icon: 'fa-terminal', status: 'Active', badge: 'Practice', locked: false, premium: false, component: 'terminal' },
+        { id: 'log-analyzer', name: 'Log Investigator', icon: 'fa-file-alt', status: 'Active', badge: 'Analyze', locked: false, premium: false, component: 'logs' },
+        { id: 'packet-inspector', name: 'Network Analyzer', icon: 'fa-network-wired', status: 'Active', badge: 'Inspect', locked: false, premium: false, component: 'packets' },
+        { id: 'ctf-challenge', name: 'CTF Challenge', icon: 'fa-flag', status: 'Active', badge: 'Capture', locked: false, premium: false, component: 'ctf' },
+        { id: 'advanced-lab', name: 'Advanced Exploit', icon: 'fa-bug', status: 'Locked', badge: 'Premium', locked: true, premium: true, component: 'premium' }
     ];
 
+    // ================================
+    // TOOL DATA (Updated)
+    // ================================
     const toolData = [
-        { name: 'Port Scanner', icon: 'fa-search', premium: false },
-        { name: 'SQLi Helper', icon: 'fa-bolt', premium: false },
-        { name: 'XSS Tester', icon: 'fa-bullseye', premium: false },
-        { name: 'Hash Cracker', icon: 'fa-key', premium: true },
-        { name: 'Burp Suite Pro', icon: 'fa-bug', premium: true },
-        { name: 'Metasploit Framework', icon: 'fa-skull', premium: true }
+        { name: 'Port Scanner', icon: 'fa-search' },
+        { name: 'SQLi Helper', icon: 'fa-bolt' },
+        { name: 'XSS Tester', icon: 'fa-bullseye' }
     ];
 
     // ================================
@@ -1634,66 +1620,15 @@
     }
 
     // ================================
-    // RENDER COURSES
+    // RENDER COURSES (Hidden from UI, but kept for lesson functionality)
     // ================================
     function renderCourses(filter = '') {
-        const container = document.getElementById('courseList');
-        container.innerHTML = '';
-
-        const filtered = allCourses.filter(c => {
-            if (activeCategory !== 'All') {
-                if (activeCategory === 'Premium' && !c.premium) return false;
-                if (c.tag !== activeCategory && activeCategory !== 'Premium') return false;
-            }
-            if (filter) {
-                const searchable = `${c.title} ${c.desc} ${c.tag}`.toLowerCase();
-                if (!searchable.includes(filter)) return false;
-            }
-            return true;
-        });
-
-        filtered.forEach(c => {
-            const p = progress[c.id] || 0;
-            const completed = completedCourses.includes(c.id);
-            const isLocked = c.premium && !isPremium;
-
-            const card = document.createElement('button');
-            card.className = 'course-card';
-            card.style.opacity = isLocked ? '0.6' : '1';
-            card.setAttribute('role', 'button');
-            card.setAttribute('tabindex', '0');
-
-            card.innerHTML = `
-                <div class="row">
-                    <div class="icon"><i class="fas ${c.icon}"></i></div>
-                    <div class="info">
-                        <div class="name">
-                            ${c.title}
-                            ${completed ? '<span class="cert-badge">🎓 Certificate</span>' : ''}
-                            ${isLocked ? '<span class="lock-icon">🔒</span>' : ''}
-                            ${c.premium && isPremium ? '<span class="premium-lock">⭐ Premium</span>' : ''}
-                        </div>
-                        <div class="desc">${c.desc}</div>
-                    </div>
-                    <div class="tag">${c.tag}</div>
-                </div>
-                <div class="progress"><div class="bar" style="width:${p}%"></div></div>
-            `;
-
-            card.addEventListener('click', () => {
-                if (isLocked) {
-                    showToast('⭐ This course is premium. Unlock it to access.', 'error');
-                    return;
-                }
-                openCourse(c.id);
-            });
-
-            container.appendChild(card);
-        });
+        // Courses are not displayed on Home anymore, but kept for lesson system
+        // This function is now empty — courses only exist in the backend
     }
 
     // ================================
-    // OPEN COURSE (With Images & Pull-Up Animation)
+    // OPEN COURSE
     // ================================
     function openCourse(courseId) {
         const course = allCourses.find(c => c.id === courseId);
@@ -1729,28 +1664,9 @@
         document.getElementById('lessonTitle').textContent = `${course.title} — Lesson ${currentLessonIndex + 1}`;
         document.getElementById('lessonProgress').textContent = `${p}%`;
 
-        let html = `
-            <h3>${lesson.title}</h3>
-            <p>${lesson.text}</p>
-        `;
-
-        // If this is the first lesson (Hardware Requirements), show images with Pull-Up animation
-        if (currentLessonIndex === 0 && course.images) {
-            html += `<div style="margin:16px 0;"><p><strong>🖼️ Course Resources</strong></p><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">`;
-            course.images.forEach(img => {
-                html += `
-                    <div class="image-card">
-                        <img src="${img.url}" alt="${img.caption}" loading="lazy" />
-                        <div class="caption">${img.caption}</div>
-                    </div>
-                `;
-            });
-            html += `</div></div>`;
-        }
-
+        let html = `<h3>${lesson.title}</h3><p>${lesson.text}</p>`;
         html += `<div class="scroll-track" id="scrollTrack"></div>`;
 
-        // Navigation
         html += `
             <div style="display:flex; gap:8px; margin-top:16px;">
                 <button class="btn" style="flex:1; background:var(--bg-surface); color:var(--text-secondary);" onclick="previousLesson()" ${currentLessonIndex === 0 ? 'disabled' : ''}>← Previous</button>
@@ -1760,7 +1676,6 @@
 
         document.getElementById('lessonContent').innerHTML = html;
 
-        // Mark lesson as viewed
         const lessonKey = `${currentCourseId}-${currentLessonIndex}`;
         if (!completedLessons.includes(lessonKey)) {
             completedLessons.push(lessonKey);
@@ -1770,7 +1685,6 @@
             if (completedLessons.length >= 10) checkBadge('lesson_10');
         }
 
-        // Update course progress
         const completedCount = course.lessons.filter((_, idx) => completedLessons.includes(`${currentCourseId}-${idx}`)).length;
         const prog = Math.round((completedCount / course.lessons.length) * 100);
         progress[course.id] = prog;
@@ -1898,15 +1812,7 @@
             `;
 
             if (isUnlocked) {
-                div.addEventListener('click', () => {
-                    const sims = {
-                        'terminal-lab': '🧪 Terminal Simulator — type commands like `ls`, `pwd`, `cat`',
-                        'log-analyzer': '🧪 Log Investigator — analyze fake logs: `2025-01-01 12:00:00 Failed login from IP 192.168.1.1`',
-                        'packet-inspector': '🧪 Network Analyzer — inspecting packet: `SYN ACK`',
-                        'ctf-challenge': '🧪 CTF Challenge — Find the flag: `FLAG{cyber_secure_2025}`'
-                    };
-                    showToast(sims[lab.id] || `🧪 ${lab.name} — interactive lab`, 'info');
-                });
+                div.addEventListener('click', () => openLab(lab.id));
             } else {
                 div.style.cursor = 'not-allowed';
                 const msg = lab.premium ? '⭐ This lab is premium. Unlock it to access.' : '🔒 Complete 2 courses to unlock this lab.';
@@ -1917,6 +1823,219 @@
         });
     }
 
+    function openLab(labId) {
+        const lab = labData.find(l => l.id === labId);
+        if (!lab || lab.locked || (lab.premium && !isPremium)) {
+            showToast('❌ This lab is locked.', 'error');
+            return;
+        }
+
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; backdrop-filter: blur(4px);
+        `;
+        overlay.id = 'labOverlay';
+
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            background: var(--bg-card); border-radius: 24px; padding: 24px;
+            max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto;
+            border: 1px solid var(--border-color);
+        `;
+
+        const closeBtn = document.createElement('span');
+        closeBtn.textContent = '✕';
+        closeBtn.style.cssText = `
+            float: right; font-size: 24px; cursor: pointer; color: var(--text-secondary);
+        `;
+        closeBtn.onclick = () => overlay.remove();
+
+        const title = document.createElement('h3');
+        title.textContent = lab.name;
+        title.style.cssText = `color: var(--accent); margin-bottom: 12px;`;
+
+        modal.appendChild(closeBtn);
+        modal.appendChild(title);
+
+        const content = document.createElement('div');
+        content.id = 'labContent';
+
+        switch (lab.component) {
+            case 'terminal':
+                content.innerHTML = buildTerminalLab();
+                break;
+            case 'logs':
+                content.innerHTML = buildLogLab();
+                break;
+            case 'packets':
+                content.innerHTML = buildPacketLab();
+                break;
+            case 'ctf':
+                content.innerHTML = buildCTFLab();
+                break;
+            case 'premium':
+                content.innerHTML = buildPremiumLab();
+                break;
+            default:
+                content.innerHTML = `<p style="color: var(--text-secondary);">Coming soon.</p>`;
+        }
+
+        modal.appendChild(content);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+    }
+
+    function buildTerminalLab() {
+        return `
+            <div style="background: #0a0a0a; border-radius: 12px; padding: 16px; font-family: monospace; font-size: 13px; color: #00ff88; max-height: 300px; overflow-y: auto;" id="terminalOutput">
+                <div>Welcome to Terminal Simulator</div>
+                <div>Type a command: ls, pwd, cat, echo, whoami</div>
+                <div style="color: #888;">─────────────────────────</div>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+                <input type="text" id="terminalInput" placeholder="Enter command..." style="flex:1; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--text-primary);" />
+                <button onclick="runCommand()" style="padding: 10px 16px; border: none; border-radius: 8px; background: var(--accent); color: #000; font-weight: 700; cursor: pointer;">Run</button>
+            </div>
+            <script>
+                function runCommand() {
+                    const input = document.getElementById('terminalInput');
+                    const output = document.getElementById('terminalOutput');
+                    const cmd = input.value.trim();
+                    if (!cmd) return;
+                    const responses = {
+                        ls: 'Desktop  Documents  Downloads  Pictures  Videos  malware.py  scan.sh',
+                        pwd: '/home/student',
+                        cat: 'This is a fake file. No real data here.',
+                        echo: (args) => args.join(' ') || '...',
+                        whoami: 'student'
+                    };
+                    let result = '';
+                    if (cmd === 'ls') result = responses.ls;
+                    else if (cmd === 'pwd') result = responses.pwd;
+                    else if (cmd === 'cat') result = responses.cat;
+                    else if (cmd.startsWith('echo ')) result = cmd.replace('echo ', '');
+                    else if (cmd === 'whoami') result = responses.whoami;
+                    else if (cmd === 'clear') { output.innerHTML = ''; input.value = ''; return; }
+                    else result = 'Command not found. Try: ls, pwd, cat, echo, whoami, clear';
+                    output.innerHTML += \`<div>\\$ ${cmd}</div><div>${result}</div>\`;
+                    input.value = '';
+                    output.scrollTop = output.scrollHeight;
+                }
+            <\/script>
+        `;
+    }
+
+    function buildLogLab() {
+        const logs = [
+            { ip: '192.168.1.45', status: '404', time: '12:01:23', path: '/admin' },
+            { ip: '10.0.0.12', status: '200', time: '12:02:45', path: '/index' },
+            { ip: '192.168.1.45', status: '403', time: '12:03:10', path: '/admin' },
+            { ip: '172.16.0.89', status: '500', time: '12:05:55', path: '/api' },
+            { ip: '192.168.1.45', status: '200', time: '12:06:30', path: '/login' },
+        ];
+        return `
+            <div style="margin-bottom: 12px;">
+                <input type="text" id="logFilter" placeholder="Filter by IP, status, or path..." style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-surface); color:var(--text-primary);" oninput="filterLogs()" />
+            </div>
+            <div style="max-height: 300px; overflow-y: auto; font-size: 13px; font-family: monospace; background: var(--bg-surface); border-radius: 8px; padding: 12px;" id="logContainer">
+                ${logs.map(log => `
+                    <div class="log-entry" data-ip="${log.ip}" data-status="${log.status}" data-path="${log.path}">
+                        <span style="color: #888;">${log.time}</span>
+                        <span style="color: #00ff88;">${log.ip}</span>
+                        <span style="color: ${log.status === '200' ? '#00ff88' : log.status === '404' ? '#ffaa00' : '#ff4444'};">${log.status}</span>
+                        <span style="color: #aaa;">${log.path}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <script>
+                function filterLogs() {
+                    const filter = document.getElementById('logFilter').value.toLowerCase();
+                    const entries = document.querySelectorAll('.log-entry');
+                    entries.forEach(el => {
+                        const text = el.textContent.toLowerCase();
+                        el.style.display = text.includes(filter) ? 'block' : 'none';
+                    });
+                }
+            <\/script>
+        `;
+    }
+
+    function buildPacketLab() {
+        const packets = [
+            { src: '192.168.1.10', dst: '8.8.8.8', proto: 'UDP', size: 64 },
+            { src: '192.168.1.10', dst: '1.1.1.1', proto: 'TCP', size: 128 },
+            { src: '10.0.0.5', dst: '192.168.1.10', proto: 'ICMP', size: 84 },
+            { src: '192.168.1.10', dst: '8.8.8.8', proto: 'TCP', size: 256 },
+        ];
+        return `
+            <div style="max-height: 300px; overflow-y: auto; font-size: 13px; font-family: monospace; background: var(--bg-surface); border-radius: 8px; padding: 12px;">
+                ${packets.map(p => `
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border-color);">
+                        <span style="color: #00ff88;">${p.src}</span>
+                        <span style="color: #aaa;">→</span>
+                        <span style="color: #ffaa00;">${p.dst}</span>
+                        <span style="color: #888;">${p.proto}</span>
+                        <span style="color: #666;">${p.size} bytes</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="margin-top: 12px; color: var(--text-secondary); font-size: 12px;">Captured packets. Click any row to inspect.</div>
+        `;
+    }
+
+    function buildCTFLab() {
+        return `
+            <div style="background: var(--bg-surface); border-radius: 12px; padding: 16px; font-family: monospace; font-size: 14px; color: #ddd;">
+                <div style="color: #00ff88;">🔍 Find the flag hidden in this code:</div>
+                <pre style="background: #0a0a0a; padding: 12px; border-radius: 8px; margin: 12px 0; color: #ffaa00;">
+function getFlag() {
+    // The flag is here: FLAG{c4ptur3d_th3_fl4g}
+    return "FLAG{c4ptur3d_th3_fl4g}";
+}
+                </pre>
+                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                    <input type="text" id="ctfInput" placeholder="Enter flag..." style="flex:1; padding:10px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-surface); color:var(--text-primary);" />
+                    <button onclick="checkCTF()" style="padding:10px 16px; border:none; border-radius:8px; background:var(--accent); color:#000; font-weight:700; cursor:pointer;">Submit</button>
+                </div>
+                <div id="ctfResult" style="margin-top: 12px; color: var(--text-secondary);"></div>
+            </div>
+            <script>
+                function checkCTF() {
+                    const input = document.getElementById('ctfInput').value.trim();
+                    const result = document.getElementById('ctfResult');
+                    if (input === 'FLAG{c4ptur3d_th3_fl4g}') {
+                        result.innerHTML = '<span style="color: #00ff88;">✅ Correct! You captured the flag!</span>';
+                        addXP(30);
+                        showToast('🎉 Flag captured! +30 XP', 'success');
+                    } else {
+                        result.innerHTML = '<span style="color: #ff4444;">❌ Wrong flag. Try again.</span>';
+                    }
+                }
+            <\/script>
+        `;
+    }
+
+    function buildPremiumLab() {
+        return `
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 48px; margin-bottom: 16px;">⭐</div>
+                <h4 style="color: var(--gold);">Premium Lab</h4>
+                <p style="color: var(--text-secondary);">This lab contains advanced exploitation exercises.</p>
+                <p style="color: var(--text-secondary);">Upgrade to premium to access:</p>
+                <ul style="color: var(--text-secondary); text-align: left; margin: 12px 0; padding-left: 20px;">
+                    <li>Buffer Overflow Simulator</li>
+                    <li>Privilege Escalation</li>
+                    <li>Reverse Engineering</li>
+                    <li>Advanced CTF Challenges</li>
+                </ul>
+                <button onclick="showUnlock()" style="margin-top: 12px; padding: 12px 24px; border: none; border-radius: 12px; background: var(--gold); color: #000; font-weight: 700; cursor: pointer;">Unlock Now</button>
+            </div>
+        `;
+    }
+
     // ================================
     // TOOLS
     // ================================
@@ -1924,7 +2043,6 @@
         const container = document.getElementById('toolList');
         container.innerHTML = '';
         const filtered = toolData.filter(t => {
-            if (t.premium && !isPremium) return false;
             if (filter) {
                 if (!t.name.toLowerCase().includes(filter)) return false;
             }
@@ -1932,26 +2050,14 @@
         });
 
         filtered.forEach(tool => {
-            const isLocked = tool.premium && !isPremium;
             const div = document.createElement('div');
             div.className = 'tool-item';
-            div.style.opacity = isLocked ? '0.5' : '1';
-
             div.innerHTML = `
                 <span class="icon"><i class="fas ${tool.icon}"></i></span>
-                <span class="name">${tool.name} ${isLocked ? '<span class="lock-icon">🔒</span>' : ''}</span>
-                ${tool.premium && isPremium ? '<span class="premium-tag">⭐ Premium</span>' : ''}
+                <span class="name">${tool.name}</span>
                 <span class="arrow"><i class="fas fa-chevron-right"></i></span>
             `;
-
-            div.addEventListener('click', () => {
-                if (isLocked) {
-                    showToast('⭐ This tool is premium. Unlock it to access.', 'error');
-                    return;
-                }
-                showToast(`🛠️ ${tool.name} — coming soon`, 'info');
-            });
-
+            div.addEventListener('click', () => showToast(`🛠️ ${tool.name} — coming soon`, 'info'));
             container.appendChild(div);
         });
     }
